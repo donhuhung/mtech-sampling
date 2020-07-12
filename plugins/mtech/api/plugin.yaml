@@ -1,0 +1,6 @@
+plugin:
+    name: 'mtech.api::lang.plugin.name'
+    description: 'mtech.api::lang.plugin.description'
+    author: Mtech
+    icon: oc-icon-link
+    homepage: ''

@@ -1,0 +1,6 @@
+plugin:
+    name: 'mtech.sampling::lang.plugin.name'
+    description: 'mtech.sampling::lang.plugin.description'
+    author: Mtech
+    icon: oc-icon-leaf
+    homepage: ''
