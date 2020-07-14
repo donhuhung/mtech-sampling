@@ -1,0 +1,13 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+gift:
+    label: 'Gift'
+    view:
+        list: $/mtech/sampling/models/gifts/columns.yaml
+        toolbarButtons: create|delete
+    manage:
+        form: $/mtech/sampling/models/gifts/fields.yaml
+        recordsPerPage: 10
+    deferredBinding: true
+    

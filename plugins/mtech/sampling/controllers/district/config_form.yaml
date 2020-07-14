@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: District
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/districts/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Districts
+
+# Default redirect location
+defaultRedirect: mtech/sampling/districts
+
+# Create page
+create:
+    title: Create District
+    redirect: mtech/sampling/district/update/:id
+    redirectClose: mtech/sampling/district
+
+# Update page
+update:
+    title: Edit District
+    redirect: mtech/sampling/district
+    redirectClose: mtech/sampling/district
+
+# Preview page
+preview:
+    title: Preview District

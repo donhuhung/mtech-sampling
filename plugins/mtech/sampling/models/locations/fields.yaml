@@ -1,0 +1,53 @@
+fields:
+    location_name:
+        label: Location
+        span: auto
+        type: text
+    project:
+        label: Project
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    user:
+        label: User
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    total_gift:
+        label: 'Total Gift'
+        span: auto
+        type: number
+    gift_run:
+        label: 'Gift Runed'
+        span: auto
+        type: number
+    gift_inventory:
+        label: 'Gift Inventory'
+        span: auto
+        type: number
+    start_date:
+        label: 'Start Date'
+        mode: date
+        span: auto
+        type: datepicker
+    end_date:
+        label: 'End Date'
+        mode: date
+        span: auto
+        type: datepicker
+    district:
+        label: District
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+tabs:
+    fields:
+        gift:
+            label: Gift
+            span: full
+            type: partial
+            path: $/mtech/sampling/controllers/location/_gift.htm
+            tab: Gift

@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Gift
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/gifts/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Gifts
+
+# Default redirect location
+defaultRedirect: mtech/sampling/gift
+
+# Create page
+create:
+    title: Create Gift
+    redirect: mtech/sampling/gift/update/:id
+    redirectClose: mtech/sampling/gift
+
+# Update page
+update:
+    title: Edit Gift
+    redirect: mtech/sampling/gift
+    redirectClose: mtech/sampling/gift
+
+# Preview page
+preview:
+    title: Preview Gift

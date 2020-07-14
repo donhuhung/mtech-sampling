@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Province
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/provinces/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Provinces
+
+# Default redirect location
+defaultRedirect: mtech/sampling/province
+
+# Create page
+create:
+    title: Create Province
+    redirect: mtech/sampling/province/update/:id
+    redirectClose: mtech/sampling/province
+
+# Update page
+update:
+    title: Edit Province
+    redirect: mtech/sampling/province
+    redirectClose: mtech/sampling/province
+
+# Preview page
+preview:
+    title: Preview Province

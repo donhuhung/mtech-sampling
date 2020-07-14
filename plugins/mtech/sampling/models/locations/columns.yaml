@@ -1,0 +1,30 @@
+columns:
+    id:
+        label: id
+        type: number
+    location_name:
+        label: Location
+        type: text
+    user_id:
+        label: 'User Manager'
+        type: number
+    total_gift:
+        label: 'Total Gift'
+        type: number
+    gift_run:
+        label: 'Gift Run'
+        type: number
+    gift_inventory:
+        label: 'Gift Inventory'
+        type: number
+    start_date:
+        label: 'Start Date'
+        type: text
+    end_date:
+        label: 'End Date'
+        type: text
+    district_id:
+        label: District
+        type: select
+        select: name
+        relation: district

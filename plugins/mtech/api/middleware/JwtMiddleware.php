@@ -1,6 +1,6 @@
 <?php
 
-namespace Filemanager\Api\Middleware;
+namespace Mtech\API\Middleware;
 
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;

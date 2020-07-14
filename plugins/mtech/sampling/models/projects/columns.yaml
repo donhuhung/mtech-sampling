@@ -1,0 +1,16 @@
+columns:
+    id:
+        label: id
+        type: number
+    project_name:
+        label: Project
+        type: text
+    start_date:
+        label: 'Start Date'
+        type: text
+    end_date:
+        label: 'End Date'
+        type: text
+    created_at:
+        label: 'Created Date'
+        type: datetime

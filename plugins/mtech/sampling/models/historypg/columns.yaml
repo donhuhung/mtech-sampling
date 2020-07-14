@@ -1,0 +1,20 @@
+columns:
+    user_id:
+        label: User
+        type: number
+        searchable: true
+        sortable: true
+        select: name
+        relation: user
+    login_time:
+        label: Login
+        type: text
+        searchable: true
+        sortable: true
+    logout_time:
+        label: Logout
+        type: text
+        sortable: true
+    created_at:
+        label: 'Created Date'
+        type: datetime

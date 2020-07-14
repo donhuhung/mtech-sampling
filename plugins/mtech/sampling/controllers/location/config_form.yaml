@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Location
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/locations/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Locations
+
+# Default redirect location
+defaultRedirect: mtech/sampling/location
+
+# Create page
+create:
+    title: Create Location
+    redirect: mtech/sampling/location/update/:id
+    redirectClose: mtech/sampling/location
+
+# Update page
+update:
+    title: Edit Location
+    redirect: mtech/sampling/location
+    redirectClose: mtech/sampling/location
+
+# Preview page
+preview:
+    title: Preview Location

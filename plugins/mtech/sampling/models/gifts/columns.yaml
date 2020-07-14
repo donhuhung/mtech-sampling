@@ -1,0 +1,22 @@
+columns:
+    id:
+        label: id
+        type: number
+    gift_name:
+        label: gift_name
+        type: text
+    location_id:
+        label: location_id
+        type: number
+    total_gift:
+        label: total_gift
+        type: number
+    gift_inventory:
+        label: gift_inventory
+        type: number
+    created_at:
+        label: created_at
+        type: datetime
+    updated_at:
+        label: updated_at
+        type: datetime

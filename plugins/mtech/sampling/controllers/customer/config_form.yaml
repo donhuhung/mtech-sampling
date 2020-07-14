@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Customer
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/customer/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Customer
+
+# Default redirect location
+defaultRedirect: mtech/sampling/customer
+
+# Create page
+create:
+    title: Create Customer
+    redirect: mtech/sampling/customer/update/:id
+    redirectClose: mtech/sampling/customer
+
+# Update page
+update:
+    title: Edit Customer
+    redirect: mtech/sampling/customer
+    redirectClose: mtech/sampling/customer
+
+# Preview page
+preview:
+    title: Preview Customer

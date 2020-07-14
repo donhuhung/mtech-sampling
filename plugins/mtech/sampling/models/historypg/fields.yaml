@@ -1,0 +1,17 @@
+fields:
+    user:
+        label: Relation
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    login_time:
+        label: 'Date picker'
+        mode: datetime
+        span: auto
+        type: datepicker
+    logout_time:
+        label: 'Date picker'
+        mode: datetime
+        span: auto
+        type: datepicker

@@ -1,0 +1,15 @@
+fields:
+    name:
+        label: Name
+        span: auto
+        type: text
+    province:
+        label: Province
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    type:
+        label: Type
+        span: auto
+        type: text

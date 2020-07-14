@@ -1,0 +1,15 @@
+fields:
+    project_name:
+        label: 'Project Name'
+        span: auto
+        type: text
+    start_date:
+        label: 'Start Date'
+        mode: date
+        span: auto
+        type: datepicker
+    end_date:
+        label: 'End Date'
+        mode: date
+        span: auto
+        type: datepicker

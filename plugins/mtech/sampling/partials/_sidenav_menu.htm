@@ -1,0 +1,57 @@
+<?php
+$index_cat=0;
+$icon_cat="";
+$sideMenuItems = BackendMenu::listSideMenuItems();
+if ($sideMenuItems):
+$collapsedGroups = explode('|',
+isset($_COOKIE['sidenav_treegroupStatus']) ? $_COOKIE['sidenav_treegroupStatus'] : null);
+$categories = [];
+foreach ($sideMenuItems as $sideItemCode => $item){
+if(!property_exists($item, 'group'))
+$item->group = 'default';
+if(!property_exists($item, 'keywords'))
+$item->keywords = '';
+if(!property_exists($item, 'description'))
+$item->description = '';
+$categories[$item->counterLabel][$sideItemCode] = $item;
+}
+?>   
+<nav id="layout-sidenav" class="layout-sidenav bg-p grand-menu-backend" data-active-class="active" data-control="sidenav">
+    <ul class="top-level">               
+        <?php foreach ($categories as $category => $items): 
+        $index_cat++;
+        $collapsed = in_array($category, $collapsedGroups);   
+            switch ($index_cat) {
+                case 1:
+                    $icon_cat = "icon-newspaper-o";
+                    break;
+                case 2:
+                    $icon_cat = " icon-globe";
+                    break;
+            }
+        ?>
+        <li data-group-code="<?= e($category) ?>" <?= $collapsed ? 'data-status="collapsed"' : null ?>>         
+            <div class="group">
+                <h3 class="nav-label">
+                    <i class="<?=  $icon_cat ?>"></i>
+                    <span>
+                        <?= $category ?>
+                    </span>
+                </h3>
+            </div>
+            <ul class="sidebar-nav" id="sidebar">     
+                <?php foreach ($items as $item): ?>
+                <li class="<?= BackendMenu::isSideMenuItemActive($item) ? 'active' : false ?>"
+                    data-keywords="<?= e(trans($item->keywords)) ?>">
+                    <a href="<?= $item->url ?>">
+                        <i class="<?= $item->icon ?>"></i>
+                        <span class="header"><?= e(trans($item->label)) ?></span>                        
+                    </a>
+                </li>
+                <?php endforeach ?>
+            </ul>
+        </li>
+        <?php endforeach ?>
+    </ul>
+    <?php endif; ?>
+</nav>

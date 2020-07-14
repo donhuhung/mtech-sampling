@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: History P G
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/historypg/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\HistoryPG
+
+# Default redirect location
+defaultRedirect: mtech/sampling/historypg
+
+# Create page
+create:
+    title: Create History P G
+    redirect: mtech/sampling/historypg/update/:id
+    redirectClose: mtech/sampling/historypg
+
+# Update page
+update:
+    title: Edit History P G
+    redirect: mtech/sampling/historypg
+    redirectClose: mtech/sampling/historypg
+
+# Preview page
+preview:
+    title: Preview History P G

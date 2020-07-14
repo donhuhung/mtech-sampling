@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Project
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/projects/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\Projects
+
+# Default redirect location
+defaultRedirect: mtech/sampling/projects
+
+# Create page
+create:
+    title: Create Project
+    redirect: mtech/sampling/project/update/:id
+    redirectClose: mtech/sampling/project
+
+# Update page
+update:
+    title: Edit Project
+    redirect: mtech/sampling/project
+    redirectClose: mtech/sampling/project
+
+# Preview page
+preview:
+    title: Preview Project
