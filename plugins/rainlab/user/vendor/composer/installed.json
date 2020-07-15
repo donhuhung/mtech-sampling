@@ -1,34 +1,31 @@
 [
     {
         "name": "composer/installers",
-        "version": "v1.9.0",
-        "version_normalized": "1.9.0.0",
+        "version": "v1.6.0",
+        "version_normalized": "1.6.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "b93bcf0fa1fccb0b7d176b0967d969691cd74cca"
+            "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/b93bcf0fa1fccb0b7d176b0967d969691cd74cca",
-            "reference": "b93bcf0fa1fccb0b7d176b0967d969691cd74cca",
+            "url": "https://api.github.com/repos/composer/installers/zipball/cfcca6b1b60bc4974324efb5783c13dca6932b5b",
+            "reference": "cfcca6b1b60bc4974324efb5783c13dca6932b5b",
             "shasum": ""
         },
         "require": {
-            "composer-plugin-api": "^1.0 || ^2.0"
+            "composer-plugin-api": "^1.0"
         },
         "replace": {
             "roundcube/plugin-installer": "*",
             "shama/baton": "*"
         },
         "require-dev": {
-            "composer/composer": "1.6.* || 2.0.*@dev",
-            "composer/semver": "1.0.* || 2.0.*@dev",
-            "phpunit/phpunit": "^4.8.36",
-            "sebastian/comparator": "^1.2.4",
-            "symfony/process": "^2.3"
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "^4.8.36"
         },
-        "time": "2020-04-07T06:57:05+00:00",
+        "time": "2018-08-27T06:10:37+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "Composer\\Installers\\Plugin",
@@ -64,7 +61,6 @@
             "Kanboard",
             "Lan Management System",
             "MODX Evo",
-            "MantisBT",
             "Mautic",
             "Maya",
             "OXID",
@@ -73,7 +69,6 @@
             "RadPHP",
             "SMF",
             "Thelia",
-            "Whmcs",
             "WolfCMS",
             "agl",
             "aimeos",
@@ -96,7 +91,6 @@
             "installer",
             "itop",
             "joomla",
-            "known",
             "kohana",
             "laravel",
             "lavalite",
@@ -119,7 +113,6 @@
             "shopware",
             "silverstripe",
             "sydes",
-            "sylius",
             "symfony",
             "typo3",
             "wordpress",

@@ -15,4 +15,8 @@ Route::group([
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('user')->group(function () {
         Route::post('/logout', 'Mtech\Api\Controllers\User@logout');               
     });
+    
+    Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('config')->group(function () {
+        Route::post('/app', 'Mtech\Api\Controllers\Setting@configApp')->name('config.ConfigApp');;               
+    });
 });

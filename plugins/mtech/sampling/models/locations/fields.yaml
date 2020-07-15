@@ -5,13 +5,7 @@ fields:
         type: text
     project:
         label: Project
-        nameFrom: name
-        descriptionFrom: description
-        span: auto
-        type: relation
-    user:
-        label: User
-        nameFrom: name
+        nameFrom: project_name
         descriptionFrom: description
         span: auto
         type: relation

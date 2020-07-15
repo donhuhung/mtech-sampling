@@ -1,0 +1,28 @@
+columns:
+    id:
+        label: id
+        type: number
+    name:
+        label: name
+        type: text
+    cmnd:
+        label: cmnd
+        type: text
+    dob:
+        label: dob
+        type: text
+    gender:
+        label: gender
+        type: number
+    phone:
+        label: phone
+        type: text
+    address:
+        label: address
+        type: text
+    otp:
+        label: otp
+        type: text
+    created_at:
+        label: created_at
+        type: datetime

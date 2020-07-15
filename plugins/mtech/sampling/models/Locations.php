@@ -2,7 +2,7 @@
 
 use Model;
 use Mtech\Sampling\Models\Gifts;
-
+use RainLab\User\Models\User As UserModel;
 
 /**
  * Model
@@ -30,11 +30,17 @@ class Locations extends Model
         'gift' => ['Mtech\Sampling\Models\Gifts','key' => 'id', 'otherKey' => 'location_id'],        
     ];
     public $belongsTo = [
-        'project' => 'Mtech\Sampling\Models\Projects',
-        'user' => 'RainLab\User\Models\User',
+        'project' => 'Mtech\Sampling\Models\Projects',        
         'district' => 'Mtech\Sampling\Models\Districts'
     ];
-    public $belongsToMany = [];
+    public $belongsToMany = [
+        'users' => [
+            'RainLab\User\Models\User', 
+            'table' => 'mtech_sampling_user_location',
+            'key'      => 'location_id',
+            'otherKey' => 'user_id'
+            ]
+    ];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];

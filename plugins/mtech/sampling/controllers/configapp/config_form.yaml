@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Config App
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/configapp/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\ConfigApp
+
+# Default redirect location
+defaultRedirect: mtech/sampling/configapp
+
+# Create page
+create:
+    title: Create Config App
+    redirect: mtech/sampling/configapp/update/:id
+    redirectClose: mtech/sampling/configapp
+
+# Update page
+update:
+    title: Edit Config App
+    redirect: mtech/sampling/configapp
+    redirectClose: mtech/sampling/configapp
+
+# Preview page
+preview:
+    title: Preview Config App

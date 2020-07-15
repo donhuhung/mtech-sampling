@@ -11,10 +11,8 @@ use Redirect;
 use Validator;
 use ValidationException;
 use ApplicationException;
-use October\Rain\Auth\AuthException;
 use Cms\Classes\Page;
 use Cms\Classes\ComponentBase;
-use RainLab\User\Models\User as UserModel;
 use RainLab\User\Models\Settings as UserSettings;
 use Exception;
 
@@ -55,12 +53,6 @@ class Account extends ComponentBase
                 'type'        => 'checkbox',
                 'default'     => 0
             ],
-            'requirePassword' => [
-                'title'       => /*Confirm password on update*/'rainlab.user::lang.account.update_requires_password',
-                'description' => /*Require the current password of the user when changing their profile.*/'rainlab.user::lang.account.update_requires_password_comment',
-                'type'        => 'checkbox',
-                'default'     => 0
-            ],
         ];
     }
 
@@ -78,7 +70,6 @@ class Account extends ComponentBase
         $this->page['canRegister'] = $this->canRegister();
         $this->page['loginAttribute'] = $this->loginAttribute();
         $this->page['loginAttributeLabel'] = $this->loginAttributeLabel();
-        $this->page['updateRequiresPassword'] = $this->updateRequiresPassword();
         $this->page['rememberLoginMode'] = $this->rememberLoginMode();
     }
 
@@ -148,14 +139,6 @@ class Account extends ComponentBase
     }
 
     /**
-     * Returns the update requires password setting
-     */
-    public function updateRequiresPassword()
-    {
-        return $this->property('requirePassword', false);
-    }
-
-    /**
      * Returns the login remember mode.
      */
     public function rememberLoginMode()
@@ -205,8 +188,6 @@ class Account extends ComponentBase
                 $data['login'] = post('username', post('email'));
             }
 
-            $data['login'] = trim($data['login']);
-
             $validation = Validator::make($data, $rules);
             if ($validation->fails()) {
                 throw new ValidationException($validation);
@@ -244,13 +225,6 @@ class Account extends ComponentBase
             }
 
             /*
-             * Record IP address
-             */
-            if ($ipAddress = Request::ip()) {
-                $user->touchIpAddress($ipAddress);
-            }
-
-            /*
              * Redirect
              */
             if ($redirect = $this->makeRedirection(true)) {
@@ -273,10 +247,6 @@ class Account extends ComponentBase
                 throw new ApplicationException(Lang::get(/*Registrations are currently disabled.*/'rainlab.user::lang.account.registration_disabled'));
             }
 
-            if ($this->isRegisterThrottled()) {
-                throw new ApplicationException(Lang::get(/*Registration is throttled. Please try again later.*/'rainlab.user::lang.account.registration_throttled'));
-            }
-
             /*
              * Validate input
              */
@@ -286,22 +256,18 @@ class Account extends ComponentBase
                 $data['password_confirmation'] = post('password');
             }
 
-            $rules = (new UserModel)->rules;
+            $rules = [
+                'email'    => 'required|email|between:6,255',
+                'password' => 'required|between:4,255|confirmed'
+            ];
 
-            if ($this->loginAttribute() !== UserSettings::LOGIN_USERNAME) {
-                unset($rules['username']);
+            if ($this->loginAttribute() == UserSettings::LOGIN_USERNAME) {
+                $rules['username'] = 'required|between:2,255';
             }
 
             $validation = Validator::make($data, $rules);
             if ($validation->fails()) {
                 throw new ValidationException($validation);
-            }
-
-            /*
-             * Record IP address
-             */
-            if ($ipAddress = Request::ip()) {
-                $data['created_ip_address'] = $data['last_ip_address'] = $ipAddress;
             }
 
             /*
@@ -401,25 +367,17 @@ class Account extends ComponentBase
             return;
         }
 
-        $data = post();
-
-        if ($this->updateRequiresPassword()) {
-            if (!$user->checkHashValue('password', $data['password_current'])) {
-                throw new ValidationException(['password_current' => Lang::get('rainlab.user::lang.account.invalid_current_pass')]);
-            }
-        }
-
         if (Input::hasFile('avatar')) {
             $user->avatar = Input::file('avatar');
         }
 
-        $user->fill($data);
+        $user->fill(post());
         $user->save();
 
         /*
          * Password has changed, reauthenticate the user
          */
-        if (array_key_exists('password', $data) && strlen($data['password'])) {
+        if (strlen(post('password'))) {
             Auth::login($user->reload(), true);
         }
 
@@ -586,18 +544,5 @@ class Account extends ComponentBase
         }
 
         return Redirect::secure(Request::path());
-    }
-
-    /**
-     * Returns true if user is throttled.
-     * @return bool
-     */
-    protected function isRegisterThrottled()
-    {
-        if (!UserSettings::get('use_register_throttle', false)) {
-            return false;
-        }
-
-        return UserModel::isRegisterThrottled(Request::ip());
     }
 }

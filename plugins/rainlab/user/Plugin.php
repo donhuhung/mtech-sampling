@@ -114,13 +114,13 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-user',
                         'url'         => Backend::url('rainlab/user/users'),
                         'permissions' => ['rainlab.users.access_users']
-                    ],
+                    ]/*,
                     'usergroups' => [
                         'label'       => 'rainlab.user::lang.groups.menu_label',
                         'icon'        => 'icon-users',
                         'url'         => Backend::url('rainlab/user/usergroups'),
                         'permissions' => ['rainlab.users.access_groups']
-                    ]
+                    ]*/
                 ]
             ]
         ];

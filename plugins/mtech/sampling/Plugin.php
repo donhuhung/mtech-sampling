@@ -5,6 +5,10 @@ namespace Mtech\Sampling;
 use Backend;
 use System\Classes\PluginBase;
 use BackendMenu;
+use Event;
+use Mail;
+use RainLab\User\Models\User as UserModel;
+use RainLab\User\Controllers\Users as UserController;
 
 class Plugin extends PluginBase {
 
@@ -37,7 +41,48 @@ class Plugin extends PluginBase {
      * @return array
      */
     public function boot() {
-        
+        //Extend user Model
+        UserModel::extend(function($model) {
+            $model->belongsToMany['locations'] = [
+                'Mtech\Sampling\Models\Locations', 
+                'table' => 'mtech_sampling_user_location',
+                'key'      => 'user_id',
+                'otherKey' => 'location_id'
+                ];                        
+        });
+
+        //Extend Form Fields
+        UserController::extendFormFields(function($form, $model, $context) {
+            if (!$model instanceof UserModel)
+                return;
+            //Remove Another Fields
+            $form->removeField('groups');
+            $form->addTabFields([                               
+                'address' => [
+                    'label' => 'Address',
+                    'type' => 'text',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',
+                ],
+                'gender' => [
+                    'label' => 'Gender',
+                    'type' => 'dropdown',
+                    'options' => [
+                        'Male' => 'Male',
+                        'Female' => 'Female'
+                    ],
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',
+                ],
+                'locations' => [
+                    'label' => 'Locations',
+                    'type' => 'relation',
+                    'select' => 'location_name',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'left',                    
+                ]
+            ]);
+        });
     }
 
     /**
@@ -141,6 +186,20 @@ class Plugin extends PluginBase {
                         'url' => Backend::url('mtech/sampling/historypg'),
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'Report Detail',
+                    ],
+                    'configapp' => [
+                        'label' => 'Config App',
+                        'icon' => 'icon-cog',
+                        'url' => Backend::url('mtech/sampling/configapp'),
+                        'permissions' => ['mtech.sampling.*'],
+                        'counterLabel' => 'Setting',
+                    ],
+                    'customergifts' => [
+                        'label' => 'Customer Gifts',
+                        'icon' => 'icon-history',
+                        'url' => Backend::url('mtech/sampling/customergifts'),
+                        'permissions' => ['mtech.sampling.*'],
+                        'counterLabel' => 'History',
                     ]
                 ]
             ],

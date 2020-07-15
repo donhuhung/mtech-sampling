@@ -1,0 +1,46 @@
+columns:
+    project_id:
+        label: Project
+        relation: project
+        select: project_name
+    show_customer_name:
+        label: Show Customer Name
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_name.htm
+        sortable: true
+    show_customer_cmnd:
+        label: Show Customer CMND
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_cmnd.htm
+    show_customer_dob:
+        label: show_customer_dob        
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_dob.htm
+    show_customer_gender:
+        label: Show Customer Gender
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_gender.htm
+    show_customer_phone:
+        label: Show Customer Phone
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_phone.htm
+    show_customer_address:
+        label: Show Customer Address
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_address.htm
+    show_customer_otp:
+        label: Show OTP
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_show_customer_otp.htm
+    number_receive_gift:
+        label: Number Receive Gift
+        type: number        
+    time_not_login_from:
+        label: Time Not Login From
+        type: text        
+    time_not_login_to:
+        label: Time Not Login To
+        type: text        
+    status:
+        label: Status
+        type: number        

@@ -72,8 +72,8 @@ class User extends General {
                 if ($userModel->methodExists('getAuthApiSigninAttributes')) {
                     $user = $userModel->getAuthApiSigninAttributes();
                 } else {
-                    $user->token = JWTAuth::fromUser($user);
                     $token = JWTAuth::fromUser($user);
+                    $user->access_token = $token;
                 }
                 $results['data']['access_token'] = $token;
                 return $this->respondWithSuccess($results, "Login succesful!");
@@ -142,9 +142,8 @@ class User extends General {
                 if (!$user)
                     return $this->respondWithError('Account does not exist. Please try again!', self::HTTP_BAD_REQUEST);
             }
-            $passwordData = Hash::make($password);
-            $user->password = $passwordData;
-            $user->password_confirmation = $passwordData;
+            $user->password = $password;
+            $user->password_confirmation = $password;
             $user->is_activated = 0;
             $user->save();
 

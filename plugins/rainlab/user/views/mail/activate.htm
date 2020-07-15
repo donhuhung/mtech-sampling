@@ -1,12 +1,27 @@
-subject = "Confirm your account"
-description = "Activate a new user"
-==
-Hello {{ name }}
+subject = "Account Registration"
+==  
+<a href="https://fic-pi.com">
+    <img style="width: 120px; margin-left: 35%" src="{{logo}}"/>
+</a>
+<p>Welcome to {{ name }} !</p>
 
-We need to verify that this is your email address.
+<p>
+    If you completed our registration form and you were expecting this e-mail, please click the link below to confirm registration:
 
-Please click the link below to confirm your account:
+</p>
+<p>
+    <a href="{{ link }}">{{ link }}</a>
+</p>
+<p>
+    If you did not make this request, please do not confirm the registration. It is also recommended that you review your e-mail account security as a precaution. If you have any questions or concerns, please feel free to contact our support team.
+    <a href="mailto:support@fic-pi.com">support@fic-pi.com</a>    
+</p>
+<p>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        FIC Team
+    </span>
+    <span style="font-size: 13px;color:gray;color: darkgray;font-style: italic;display: block">
+        Automated message.please do not reply
+    </span>
+</p>
 
-{% partial 'button' url=link type='positive' body %}
-Confirm account
-{% endpartial %}

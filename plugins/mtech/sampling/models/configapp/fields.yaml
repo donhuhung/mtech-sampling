@@ -1,0 +1,53 @@
+fields:
+    project:
+        label: Project
+        nameFrom: project_name
+        descriptionFrom: description
+        span: auto
+        type: relation
+    number_receive_gift:
+        label: 'Number Receive Gift'
+        span: auto
+        type: text
+    time_not_login_from:
+        label: 'Time Not Allow Login From'
+        mode: time
+        span: auto
+        type: datepicker
+    time_not_login_to:
+        label: 'Time Not Allow Login To'
+        mode: time
+        span: auto
+        type: datepicker
+    show_customer_name:
+        label: 'Show Customer Name'
+        span: auto
+        type: switch
+    show_customer_cmnd:
+        label: 'Show Customer CMND'
+        span: auto
+        type: switch
+    show_customer_dob:
+        label: 'Show Customer DOB'
+        span: auto
+        type: switch
+    show_customer_gender:
+        label: 'Show Customer Gender'
+        span: auto
+        type: switch
+    show_customer_phone:
+        label: 'Show Customer Phone'
+        span: auto
+        type: switch
+    show_customer_address:
+        label: 'Show Customer Address'
+        span: auto
+        type: switch
+    show_customer_otp:
+        label: 'Show OTP'
+        span: auto
+        type: switch
+    status:
+        label: Status
+        span: auto
+        type: switch    

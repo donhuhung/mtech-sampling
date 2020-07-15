@@ -1,0 +1,21 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+deposit:
+    label: 'History Deposit'
+    view:
+        list: $/zilliqa/backend/models/historydeposit/columns.yaml
+        toolbarButtons: create|delete
+    manage:
+        form: $/zilliqa/backend/models/historydeposit/fields.yaml
+        recordsPerPage: 10
+    deferredBinding: true
+withdraw:
+    label: 'Hidtory WithDraw'
+    view:
+        list: $/zilliqa/backend/models/historywithdraw/columns.yaml
+        toolbarButtons: create|delete
+    manage:
+        form: $/zilliqa/backend/models/historywithdraw/fields.yaml
+        recordsPerPage: 10
+    deferredBinding: true

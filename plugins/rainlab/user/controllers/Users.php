@@ -4,7 +4,6 @@ use Auth;
 use Lang;
 use Flash;
 use Response;
-use Redirect;
 use BackendMenu;
 use BackendAuth;
 use Backend\Classes\Controller;
@@ -21,7 +20,8 @@ class Users extends Controller
      */
     public $implement = [
         \Backend\Behaviors\FormController::class,
-        \Backend\Behaviors\ListController::class
+        \Backend\Behaviors\ListController::class,
+		\Backend\Behaviors\RelationController::class
     ];
 
     /**
@@ -37,7 +37,7 @@ class Users extends Controller
     /**
      * @var array `RelationController` configuration, by extension.
      */
-    public $relationConfig;
+    public $relationConfig = 'config_relation.yaml';
 
     /**
      * @var array Permissions required to view this page.
@@ -72,22 +72,12 @@ class Users extends Controller
      */
     public function listInjectRowClass($record, $definition = null)
     {
-        $classes = [];
-
         if ($record->trashed()) {
-            $classes[] = 'strike';
-        }
-
-        if ($record->isBanned()) {
-            $classes[] = 'negative';
+            return 'strike';
         }
 
         if (!$record->is_activated) {
-            $classes[] = 'disabled';
-        }
-
-        if (count($classes) > 0) {
-            return join(' ', $classes);
+            return 'disabled';
         }
     }
 
@@ -220,20 +210,6 @@ class Users extends Controller
         Auth::impersonate($model);
 
         Flash::success(Lang::get('rainlab.user::lang.users.impersonate_success'));
-    }
-
-    /**
-     * Unsuspend this user
-     */
-    public function preview_onUnsuspendUser($recordId)
-    {
-        $model = $this->formFindModelObject($recordId);
-
-        $model->unsuspend();
-
-        Flash::success(Lang::get('rainlab.user::lang.users.unsuspend_success'));
-
-        return Redirect::refresh();
     }
 
     /**

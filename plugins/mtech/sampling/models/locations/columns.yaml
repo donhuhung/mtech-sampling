@@ -5,9 +5,10 @@ columns:
     location_name:
         label: Location
         type: text
-    user_id:
-        label: 'User Manager'
-        type: number
+    project_id:
+        label: Project
+        relation: project
+        select: project_name
     total_gift:
         label: 'Total Gift'
         type: number
@@ -25,6 +26,5 @@ columns:
         type: text
     district_id:
         label: District
-        type: select
-        select: name
         relation: district
+        select: name

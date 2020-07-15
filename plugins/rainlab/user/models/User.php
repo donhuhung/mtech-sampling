@@ -4,11 +4,10 @@ use Str;
 use Auth;
 use Mail;
 use Event;
-use Config;
-use Carbon\Carbon;
 use October\Rain\Auth\Models\User as UserBase;
 use RainLab\User\Models\Settings as UserSettings;
 use October\Rain\Auth\AuthException;
+use Zilliqa\Backend\Models\Country;
 
 class User extends UserBase
 {
@@ -26,8 +25,8 @@ class User extends UserBase
         'email'    => 'required|between:6,255|email|unique:users',
         'avatar'   => 'nullable|image|max:4000',
         'username' => 'required|between:2,255|unique:users',
-        'password' => 'required:create|between:8,255|confirmed',
-        'password_confirmation' => 'required_with:password|between:8,255',
+        'password' => 'required:create|between:' . UserSettings::MIN_PASSWORD_LENGTH_DEFAULT . ',255|confirmed',
+        'password_confirmation' => 'required_with:password|between:' . UserSettings::MIN_PASSWORD_LENGTH_DEFAULT . ',255',
     ];
 
     /**
@@ -52,8 +51,10 @@ class User extends UserBase
         'email',
         'password',
         'password_confirmation',
-        'created_ip_address',
-        'last_ip_address'
+        'gender',
+        'dob',
+        'id_card',
+        'date_issue'
     ];
 
     /**
@@ -80,7 +81,7 @@ class User extends UserBase
     public function attemptActivation($code)
     {
         if ($this->trashed()) {
-            if ($code === $this->activation_code) {
+            if ($code == $this->activation_code) {
                 $this->restore();
             } else {
                 return false;
@@ -202,7 +203,7 @@ class User extends UserBase
      */
     public static function getMinPasswordLength()
     {
-        return Config::get('rainlab.user::minPasswordLength', 8);
+        return (int) UserSettings::get('min_password_length', UserSettings::MIN_PASSWORD_LENGTH_DEFAULT);
     }
 
     //
@@ -247,6 +248,7 @@ class User extends UserBase
         ) {
             $this->username = $this->email;
         }
+
 
         /*
          * Apply Password Length Settings
@@ -358,68 +360,6 @@ class User extends UserBase
     }
 
     //
-    // Suspending
-    //
-
-    /**
-     * Check if the user is suspended.
-     * @return bool
-     */
-    public function isSuspended()
-    {
-        return Auth::findThrottleByUserId($this->id)->checkSuspended();
-    }
-
-    /**
-     * Remove the suspension on this user.
-     * @return void
-     */
-    public function unsuspend()
-    {
-        Auth::findThrottleByUserId($this->id)->unsuspend();
-    }
-
-    //
-    // IP Recording and Throttle
-    //
-
-    /**
-     * Records the last_ip_address to reflect the last known IP for this user.
-     * @param string|null $ipAddress
-     * @return void
-     */
-    public function touchIpAddress($ipAddress)
-    {
-        $this
-            ->newQuery()
-            ->where('id', $this->id)
-            ->update(['last_ip_address' => $ipAddress])
-        ;
-    }
-
-    /**
-     * Returns true if IP address is throttled and cannot register
-     * again. Maximum 3 registrations every 60 minutes.
-     * @param string|null $ipAddress
-     * @return bool
-     */
-    public static function isRegisterThrottled($ipAddress)
-    {
-        if (!$ipAddress) {
-            return false;
-        }
-
-        $timeLimit = Carbon::now()->subMinutes(60);
-        $count = static::make()
-            ->where('created_ip_address', $ipAddress)
-            ->where('created_at', '>', $timeLimit)
-            ->count()
-        ;
-
-        return $count > 2;
-    }
-
-    //
     // Last Seen
     //
 
@@ -510,5 +450,10 @@ class User extends UserBase
     protected function generatePassword()
     {
         $this->password = $this->password_confirmation = Str::random(static::getMinPasswordLength());
+    }
+
+    public function getCountryIdOptions() {
+        $countries = Country::lists('name', 'id');
+        return $countries;
     }
 }
