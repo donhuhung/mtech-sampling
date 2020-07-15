@@ -10,7 +10,9 @@ use Rainlab\User\Models\UserGroup;
 use Mtech\API\Transformers\UserTransformer;
 use Lang;
 use JWTAuth;
-
+use Mtech\Sampling\Models\HistoryPG;
+use Mtech\Sampling\Models\Locations;
+use Mtech\Sampling\Models\UserLocations;
 /**
  * User Back-end Controller
  */
@@ -76,6 +78,7 @@ class User extends General {
                     $user->access_token = $token;
                 }
                 $results['data']['access_token'] = $token;
+                $this->updateHistory($user,true);
                 return $this->respondWithSuccess($results, "Login succesful!");
             } else {
                 return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
@@ -100,9 +103,13 @@ class User extends General {
      *   }
      * )
      */
-    public function logout() {
+    public function logout(Request $request) {
         try {
-            JWTAuth::invalidate();
+            $token = $request->header('Authorization');
+            $token = str_replace('Bearer ','',$token);        
+            $user = JWTAuth::authenticate($token);
+            $this->updateHistory($user, false);
+            JWTAuth::invalidate();           
             return $this->respondWithMessage('Logout succesful!');
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
@@ -200,6 +207,33 @@ class User extends General {
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }
+    }
+
+    protected function updateHistory($user,$is_login) {
+        $user_location_ids = UserLocations::where('user_id','=',$user->id)
+                        ->groupBy('location_id')->select('location_id')->get()->pluck('location_id');
+        $location_ids = Locations::join('mtech_sampling_projects','mtech_sampling_projects.id','=','mtech_sampling_locations.project_id')
+                            ->whereIn('mtech_sampling_locations.id',$user_location_ids)
+                            ->where('mtech_sampling_projects.status', 1)->select('mtech_sampling_locations.id as id')->get()->pluck('id');
+        if($is_login) {
+            $data = [];
+            foreach ($location_ids as $location_id) {
+                $data[] = [
+                    'user_id' => $user->id,
+                    'location_id' => $location_id,
+                    'login_time' => date('Y-m-d H:i:s')
+                ];
+            }
+            HistoryPG::insert($data);
+            return 0;
+        } 
+        $historyPgs = HistoryPG::where('user_id',$user->id)->whereIn('location_id',$location_ids)
+                        ->whereNull('logout_time')->get();
+        foreach($historyPgs as $historyPg) {
+            $historyPg->logout_time = date('Y-m-d H:i:s');
+            $historyPg->save();
+        }
+        return 1;
     }
 
 }
