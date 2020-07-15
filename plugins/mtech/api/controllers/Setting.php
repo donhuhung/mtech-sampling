@@ -5,7 +5,7 @@ use Validator;
 use Hash;
 use Mtech\Sampling\Models\ConfigApp;
 use Mtech\Sampling\Models\Projects;
-use Mtech\API\Transformers\UserTransformer;
+use Mtech\API\Transformers\SettingTransformer;
 use Lang;
 use JWTAuth;
 
@@ -38,31 +38,15 @@ class Setting extends General
      * )
      */
     public function configApp(Request $request) {
-        try {
-            $now = date('Y-m-d H:i:s');
+        try {            
             $project = $this->projectRepository->where('status',1)->first();
             if(!$project){
                 return $this->respondWithMessage('Data not found!');
             }
-            $projectId = $project->id;
-            echo $projectId;die;
-            if (Hash::check($password, $user->password)) {
-                $userModel = JWTAuth::authenticate($token);
-                $user->last_login = $now;
-                $user->save();
-
-                $results = fractal($user, new UserTransformer())->toArray();
-                if ($userModel->methodExists('getAuthApiSigninAttributes')) {
-                    $user = $userModel->getAuthApiSigninAttributes();
-                } else {
-                    $user->token = JWTAuth::fromUser($user);
-                    $token = JWTAuth::fromUser($user);
-                }
-                $results['data']['access_token'] = $token;
-                return $this->respondWithSuccess($results, "Login succesful!");
-            } else {
-                return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
-            }
+            $projectId = $project->id;            
+            $setting = $this->settingRepository->where('project_id',$projectId)->first();
+            $results = fractal($setting, new SettingTransformer())->toArray();
+            return $this->respondWithSuccess($results, "Get Config succesful!");
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }
