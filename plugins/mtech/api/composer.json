@@ -1,0 +1,17 @@
+{
+    "name": "mtech/api",
+    "description": "A plugin for Focus Sampling",
+    "license": "Hung GNU",
+    "authors": [
+        {
+            "name": "Do Nhu Hung",
+            "email": "hungdn0502@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "classes/helper.php"
+        ]
+    },
+    "minimum-stability": "dev"
+}

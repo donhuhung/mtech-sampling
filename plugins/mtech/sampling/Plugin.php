@@ -12,6 +12,9 @@ use RainLab\User\Controllers\Users as UserController;
 
 class Plugin extends PluginBase {
 
+    private $isNew = false;
+    private $sendEmail = false;
+
     /**
      * Returns information about this plugin.
      *
@@ -44,11 +47,11 @@ class Plugin extends PluginBase {
         //Extend user Model
         UserModel::extend(function($model) {
             $model->belongsToMany['locations'] = [
-                'Mtech\Sampling\Models\Locations', 
+                'Mtech\Sampling\Models\Locations',
                 'table' => 'mtech_sampling_user_location',
-                'key'      => 'user_id',
+                'key' => 'user_id',
                 'otherKey' => 'location_id'
-                ];                        
+            ];
         });
 
         //Extend Form Fields
@@ -57,7 +60,7 @@ class Plugin extends PluginBase {
                 return;
             //Remove Another Fields
             $form->removeField('groups');
-            $form->addTabFields([                               
+            $form->addTabFields([
                 'address' => [
                     'label' => 'Address',
                     'type' => 'text',
@@ -79,9 +82,23 @@ class Plugin extends PluginBase {
                     'type' => 'relation',
                     'select' => 'location_name',
                     'tab' => 'rainlab.user::lang.user.account',
-                    'span' => 'left',                    
+                    'span' => 'left',
                 ]
             ]);
+        });
+
+        UserModel::saved(function($model) {
+            if (!$this->sendEmail) {
+                if ($model->is_activated == 1) {
+                    $this->sendEmail = true;
+                    $new_password = $model->reset_password_code;
+                    $params = [
+                        'name' => $model->name,
+                        'new_password' => $new_password
+                    ];
+                    Mail::sendTo($model->email, 'mtech.api::mail.resetpassword', $params);
+                }
+            }
         });
     }
 
@@ -137,7 +154,7 @@ class Plugin extends PluginBase {
                         'url' => Backend::url('mtech/sampling/district'),
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'General',
-                    ],                    
+                    ],
                     'productbrand' => [
                         'label' => 'Product brands',
                         'icon' => 'icon-address-card-o',

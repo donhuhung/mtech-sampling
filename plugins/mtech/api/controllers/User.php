@@ -13,6 +13,7 @@ use JWTAuth;
 use Mtech\Sampling\Models\HistoryPG;
 use Mtech\Sampling\Models\Locations;
 use Mtech\Sampling\Models\UserLocations;
+use Mtech\API\Classes\HelperClass;
 /**
  * User Back-end Controller
  */
@@ -130,8 +131,7 @@ class User extends General {
      *     description="Login User",
      *     required=true,
      *    @SWG\Schema(example={
-     *         "email": "test@gmail.com",
-     *         "password": "12345678"
+     *         "email": "test@gmail.com"
      *      })
      *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
@@ -141,16 +141,17 @@ class User extends General {
     public function forgotPassWord(Request $request) {
         try {
             $email = $request->get('email');
-            $phone = $request->get('phone');
-            $password = $request->get('password');
+            $phone = $request->get('phone');            
             $user = $this->userRepository->where('email', $email)->first();
             if (!$user) {
                 $user = $this->userRepository->where('phone', $phone)->first();
                 if (!$user)
                     return $this->respondWithError('Account does not exist. Please try again!', self::HTTP_BAD_REQUEST);
             }
+            $password = HelperClass::randomString(6);
             $user->password = $password;
             $user->password_confirmation = $password;
+            $user->reset_password_code = $password;
             $user->is_activated = 0;
             $user->save();
 
