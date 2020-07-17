@@ -5,7 +5,7 @@ use Model;
 /**
  * Model
  */
-class CustomerGifts extends Model
+class ProductSampling extends Model
 {
     use \October\Rain\Database\Traits\Validation;
     
@@ -13,12 +13,11 @@ class CustomerGifts extends Model
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'mtech_sampling_customer_gift';
+    public $table = 'mtech_sampling_product';
 
     /**
      * @var array Validation rules
      */
-    public $rules = [];
-    
-    protected $fillable = ['customer_id','gift_id','location_id'];
+    public $rules = [
+    ];
 }

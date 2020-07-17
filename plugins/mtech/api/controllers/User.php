@@ -28,9 +28,9 @@ class User extends General {
     /**
      * @SWG\Post(
      *   path="/api/v1/user/login",
-     *   description="",
+     *   description="Login User",
      *   summary="Login User",
-     *   operationId="api.v1.postUpdateProfile",
+     *   operationId="api.v1.postLoginUser",
      *   produces={"application/json"},
      *   tags={"User"},
      * @SWG\Parameter(

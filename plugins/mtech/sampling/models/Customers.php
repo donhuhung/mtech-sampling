@@ -18,6 +18,24 @@ class Customers extends Model
     /**
      * @var array Validation rules
      */
-    public $rules = [
+    public $rules = [];
+    
+    /**
+     * @var array Fillable fields
+     */
+    protected $fillable = ['name','cmnd','dob','gender','phone','address','otp','brand_in_use','product_name','product_sampling','location_id'];
+    
+    /**
+     * @var array Relations
+     */
+    public $hasOne = [];
+    public $hasMany = [];
+    public $belongsTo = [
+        'productSampling' => ['Mtech\Sampling\Models\ProductSampling','key' => 'product_sampling'],
+        'location' => ['Mtech\Sampling\Models\Locations','key' => 'location_id'],
     ];
+    public $belongsToMany = [];
+    public $morphTo = [];
+    public $morphOne = [];
+    public $morphMany = [];
 }

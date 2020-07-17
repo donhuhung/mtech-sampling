@@ -32,6 +32,18 @@ columns:
         label: Show OTP
         type: partial
         path: ~/plugins/mtech/sampling/models/configapp/_show_customer_otp.htm
+    brand_in_use:
+        label: Brand In Use
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_brand_in_use.htm
+    product_name:
+        label: Product Name
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_product_name.htm
+    product_sampling:
+        label: Product Sampling
+        type: partial
+        path: ~/plugins/mtech/sampling/models/configapp/_product_sampling.htm
     number_receive_gift:
         label: Number Receive Gift
         type: number        

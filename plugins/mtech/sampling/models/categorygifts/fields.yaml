@@ -1,0 +1,9 @@
+fields:
+    name:
+        label: Name
+        span: auto
+        type: text
+    status:
+        label: Status
+        span: auto
+        type: switch

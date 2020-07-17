@@ -47,6 +47,18 @@ fields:
         label: 'Show OTP'
         span: auto
         type: switch
+    brand_in_use:
+        label: 'Brand In Use'
+        span: auto
+        type: switch
+    product_name:
+        label: 'Product Name'
+        span: auto
+        type: switch
+    product_sampling:
+        label: 'Product Sampling'
+        span: auto
+        type: switch
     status:
         label: Status
         span: auto

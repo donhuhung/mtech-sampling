@@ -18,7 +18,7 @@ class HistoryPG extends Model
     /**
      * @var array Validation rules
      */
-    public $rules = [];
+    public $rules = [];        
     
         /**
      * @var array Relations

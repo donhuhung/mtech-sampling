@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Product Sampling
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/productsampling/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\ProductSampling
+
+# Default redirect location
+defaultRedirect: mtech/sampling/productsampling
+
+# Create page
+create:
+    title: Create Product Sampling
+    redirect: mtech/sampling/productsampling/update/:id
+    redirectClose: mtech/sampling/productsampling
+
+# Update page
+update:
+    title: Edit Product Sampling
+    redirect: mtech/sampling/productsampling
+    redirectClose: mtech/sampling/productsampling
+
+# Preview page
+preview:
+    title: Preview Product Sampling

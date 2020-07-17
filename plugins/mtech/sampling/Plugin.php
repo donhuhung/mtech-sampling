@@ -67,6 +67,12 @@ class Plugin extends PluginBase {
                     'tab' => 'rainlab.user::lang.user.account',
                     'span' => 'auto',
                 ],
+                'phone' => [
+                    'label' => 'Phone',
+                    'type' => 'text',
+                    'tab' => 'rainlab.user::lang.user.account',
+                    'span' => 'auto',
+                ],
                 'gender' => [
                     'label' => 'Gender',
                     'type' => 'dropdown',
@@ -166,6 +172,13 @@ class Plugin extends PluginBase {
                         'label' => 'Category Gifts',
                         'icon' => 'icon-gift',
                         'url' => Backend::url('mtech/sampling/categorygift'),
+                        'permissions' => ['mtech.sampling.*'],
+                        'counterLabel' => 'General',
+                    ],
+                    'productsampling' => [
+                        'label' => 'Product Sampling',
+                        'icon' => 'icon-newspaper-o',
+                        'url' => Backend::url('mtech/sampling/productsampling'),
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'General',
                     ],

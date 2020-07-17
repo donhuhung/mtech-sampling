@@ -6,8 +6,21 @@ columns:
         label: gift_name
         type: text
     location_id:
-        label: location_id
-        type: number
+        label: Location
+        relation: location
+        select: location_name
+    category_gift:
+        label: Category
+        relation: category
+        select: name
+    location_id:
+        label: Location
+        relation: location
+        select: location_name
+    product_brand:
+        label: 'Product Brand'
+        relation: productBrand
+        select: name
     total_gift:
         label: total_gift
         type: number

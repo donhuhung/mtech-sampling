@@ -22,6 +22,12 @@ fields:
         descriptionFrom: description
         span: auto
         type: relation
+    location:
+        label: Location
+        nameFrom: location_name
+        descriptionFrom: description
+        span: auto
+        type: relation
     productBrand:
         label: 'Product Brand'
         nameFrom: name
