@@ -19,7 +19,6 @@ class SettingTransformer extends Fractal\TransformerAbstract {
             'show_customer_phone' => $config->show_customer_phone,
             'show_customer_address' => $config->show_customer_address,
             'show_customer_otp' => $config->show_customer_otp,
-            'number_receive_gift' => $config->number_receive_gift,
             'time_not_login_from' => $config->time_not_login_from,
             'time_not_login_to' => $config->time_not_login_to,
             'createdAt' => Carbon::parse($config->created_at)->format('Y-m-d'),

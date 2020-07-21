@@ -23,7 +23,7 @@ class Customers extends Model
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['name','cmnd','dob','gender','phone','address','otp','brand_in_use','product_name','product_sampling','location_id'];
+    protected $fillable = ['name','cmnd','dob','gender','phone','address','otp','brand_in_use','product_name','product_sampling','location_id','file_name_avatar','file_name_bill'];
     
     /**
      * @var array Relations

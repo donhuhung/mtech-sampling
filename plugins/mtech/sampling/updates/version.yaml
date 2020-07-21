@@ -111,3 +111,18 @@
 1.0.38:
     - 'Updated table mtech_sampling_customer'
     - builder_table_update_mtech_sampling_customer_6.php
+1.0.39:
+    - 'Updated table mtech_sampling_config_app'
+    - builder_table_update_mtech_sampling_config_app_3.php
+1.0.40:
+    - 'Updated table mtech_sampling_projects'
+    - builder_table_update_mtech_sampling_projects_3.php
+1.0.41:
+    - 'Updated table mtech_sampling_projects'
+    - builder_table_update_mtech_sampling_projects_4.php
+1.0.42:
+    - 'Updated table mtech_sampling_customer'
+    - builder_table_update_mtech_sampling_customer_7.php
+1.0.43:
+    - 'Updated table mtech_sampling_customer'
+    - builder_table_update_mtech_sampling_customer_8.php

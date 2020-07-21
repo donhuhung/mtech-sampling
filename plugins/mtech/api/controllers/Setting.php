@@ -8,6 +8,7 @@ use Mtech\Sampling\Models\Locations;
 use Mtech\API\Transformers\ProductSamplingTransformer;
 use Mtech\API\Transformers\SettingTransformer;
 use Mtech\API\Transformers\LocationTransformer;
+use Mtech\API\Transformers\ProjectTransformer;
 
 /**
  * Setting Back-end Controller
@@ -116,6 +117,46 @@ class Setting extends General
             }                        
             $results = fractal($locations, new LocationTransformer())->toArray();
             return $this->respondWithSuccess($results, "Get List Location succesful!");
+        } catch (\Exception $ex) {
+            return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
+        }
+    }
+    
+    /**
+     * @SWG\Post(
+     *   path="/api/v1/general/get-list-project",
+     *   description="",
+     *   summary="Get List Project",
+     *   operationId="api.v1.getListProject",
+     *   produces={"application/json"},
+     *   tags={"General"},
+     * @SWG\Parameter(
+     *     name="body",
+     *     in="body",
+     *     description="Get List Project",
+     *     required=true,
+     *    @SWG\Schema(example={
+     *         "location_id": 1
+     *      })
+     *   ),
+     * @SWG\Response(response=200, description="Server is OK!"),
+     * @SWG\Response(response=500, description="Internal server error!"),
+     *  security={
+     *     {"bearerAuth":{}}
+     *   }
+     * )
+     */
+    public function getProjects(Request $request) {
+        try {       
+            $locationId = $request->get('location_id');
+            $location = $this->locationRepository->find($locationId);
+            $projectId = $location->project_id;
+            $project = $this->projectRepository->where('status',1)->where('id',$projectId)->first();
+            if(!$project){
+                return $this->respondWithMessage('Data not found!');
+            }
+            $results = fractal($project, new ProjectTransformer())->toArray();
+            return $this->respondWithSuccess($results, "Get List Project succesful!");
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }

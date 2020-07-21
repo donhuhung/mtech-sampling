@@ -11,6 +11,9 @@ columns:
     end_date:
         label: 'End Date'
         type: text
-    created_at:
-        label: 'Created Date'
-        type: datetime
+    number_receive_gift:
+        label: 'Number Receive Gift'
+        type: number
+    allow_choose_gift:
+        label: 'Allow Choose Gift'
+        type: switch

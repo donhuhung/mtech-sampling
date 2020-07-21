@@ -23,10 +23,15 @@ Route::group([
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('general')->group(function () {
         Route::get('/get-product-sampling', 'Mtech\Api\Controllers\Setting@getProductSampling')->name('general.getProductSampling');           
         Route::get('/get-list-location', 'Mtech\Api\Controllers\Setting@getLocations')->name('general.getListLocation');           
+        Route::post('/get-list-project', 'Mtech\Api\Controllers\Setting@getProjects')->name('general.getProjects');           
     });
     
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('customer')->group(function () {
         Route::post('/store', 'Mtech\Api\Controllers\Customer@storeCustomer');
+    });
+    
+    Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('gift')->group(function () {
+        Route::post('/list', 'Mtech\Api\Controllers\Gift@getListGift');
     });
     
 });

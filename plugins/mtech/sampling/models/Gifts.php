@@ -40,14 +40,15 @@ class Gifts extends Model {
     public $morphOne = [];
     public $morphMany = [];
 
-    public function randomGift($user_id, $location_id) {
+    public function randomGift($user_id, $location_id, $numberReceiveGift) {
         date_default_timezone_set('Asia/Jakarta');
-        $gift_id = $this->processRandomGift($user_id, $location_id);
-        return $gift_id;
+        $gift = $this->processRandomGift($user_id, $location_id, $numberReceiveGift);
+        return $gift;
     }
 
-    public function processRandomGift($user_id, $location_id) {
+    public function processRandomGift($user_id, $location_id, $numberReceiveGift) {
         //random gift 
+        $arrGift = [];
         $projects = Projects::where('status', 1)->get();
         if ($projects) {
             $arrProject = [];
@@ -59,24 +60,24 @@ class Gifts extends Model {
             foreach ($locations as $location) {
                 array_push($arrLocation, $location->id);
             }
-            $data = $this->whereRaw('total_gift > 0 ')
-                    ->whereIn('location_id', $arrLocation)
-                    ->orderByRaw('RAND()')
-                    ->first();
-            if ($data) {
-                $gift_id = $data->id;
-                $gift_name = $data->name;
-                $location_id = $data->location_id;
-                //update number gift random    
-                Db::table('mtech_sampling_locations')->where('id', $location_id)->decrement('total_gift');
-                Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('total_gift');
-                $this->insertUserReceiveGift($user_id, $gift_id, $location_id);
-                return (array(
-                    'gift_id' => $gift_id,
-                    'gift_name' => $gift_name
-                ));
-            } else
-                return false;
+            for ($i = 0; $i < $numberReceiveGift; $i++) {
+                $data = $this->whereRaw('total_gift > 0 ')
+                        ->whereIn('location_id', $arrLocation)
+                        ->orderByRaw('RAND()')
+                        ->first();
+                if ($data) {
+                    $gift_id = $data->id;
+                    $location_id = $data->location_id;
+                    //update number gift random    
+                    Db::table('mtech_sampling_locations')->where('id', $location_id)->decrement('total_gift');
+                    Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('total_gift');
+                    $this->insertUserReceiveGift($user_id, $gift_id, $location_id);
+                    array_push($arrGift, $gift_id);
+                }
+            }
+            return (array(
+                'gift' => $arrGift,
+            ));
         }
         return false;
     }

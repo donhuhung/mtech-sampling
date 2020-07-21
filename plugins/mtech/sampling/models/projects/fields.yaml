@@ -13,3 +13,11 @@ fields:
         mode: date
         span: auto
         type: datepicker
+    number_receive_gift:
+        label: 'Number Receive Gift'
+        span: auto
+        type: number
+    allow_choose_gift:
+        label: 'Allow Choose Gift'
+        span: auto
+        type: switch
