@@ -6,10 +6,10 @@
 name: Customer
 
 # Model Form Field configuration
-form: $/mtech/sampling/models/customer/fields.yaml
+form: $/mtech/sampling/models/customers/fields.yaml
 
 # Model Class name
-modelClass: Mtech\Sampling\Models\Customer
+modelClass: Mtech\Sampling\Models\Customers
 
 # Default redirect location
 defaultRedirect: mtech/sampling/customer

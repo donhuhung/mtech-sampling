@@ -6,10 +6,10 @@
 name: Customer Gift
 
 # Model Form Field configuration
-form: $/mtech/sampling/models/customergift/fields.yaml
+form: $/mtech/sampling/models/customergifts/fields.yaml
 
 # Model Class name
-modelClass: Mtech\Sampling\Models\CustomerGift
+modelClass: Mtech\Sampling\Models\CustomerGifts
 
 # Default redirect location
 defaultRedirect: mtech/sampling/customergift

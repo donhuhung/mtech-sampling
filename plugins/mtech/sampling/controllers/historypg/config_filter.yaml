@@ -1,0 +1,10 @@
+scopes:
+  user:
+      label: User
+      modelClass: RainLab\User\Models\User
+      nameFrom: name
+      scope: filterByUser
+  created_at:
+        label: Date
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'

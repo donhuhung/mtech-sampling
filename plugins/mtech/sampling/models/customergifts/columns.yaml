@@ -4,13 +4,16 @@ columns:
         type: number
     customer_id:
         label: customer_id
-        type: number
+        relation: customer
+        select: name
     gift_id:
         label: gift_id
-        type: number
+        relation: gift
+        select: gift_name
     location_id:
         label: location_id
-        type: number
+        relation: location
+        select: location_name
     created_at:
         label: created_at
         type: datetime

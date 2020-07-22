@@ -23,6 +23,10 @@ columns:
     otp:
         label: otp
         type: text
+    location_id:
+        label: Location
+        relation: location
+        select: location_name
     created_at:
         label: created_at
         type: datetime

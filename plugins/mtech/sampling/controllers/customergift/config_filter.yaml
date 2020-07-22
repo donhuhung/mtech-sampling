@@ -1,0 +1,20 @@
+scopes:
+  customer:
+      label: Customer
+      modelClass: Mtech\Sampling\Models\Customers
+      nameFrom: name
+      scope: filterByCustomer
+  gift:
+      label: Gift
+      modelClass: Mtech\Sampling\Models\Gifts
+      nameFrom: gift_name
+      scope: filterByGift
+  location:
+      label: Location
+      modelClass: Mtech\Sampling\Models\Locations
+      nameFrom: location_name
+      scope: filterByLocation
+  created_at:
+        label: Date
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'

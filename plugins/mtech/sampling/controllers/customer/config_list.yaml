@@ -3,10 +3,10 @@
 # ===================================
 
 # Model List Column configuration
-list: $/mtech/sampling/models/customer/columns.yaml
+list: $/mtech/sampling/models/customers/columns.yaml
 
 # Model Class name
-modelClass: Mtech\Sampling\Models\Customer
+modelClass: Mtech\Sampling\Models\Customers
 
 # List Title
 title: Manage Customers
@@ -45,3 +45,4 @@ toolbar:
     # Search widget configuration
     search:
         prompt: backend::lang.list.search_prompt
+filter: config_filter.yaml

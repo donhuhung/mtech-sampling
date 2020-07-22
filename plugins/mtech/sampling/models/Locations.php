@@ -53,4 +53,10 @@ class Locations extends Model
         $gifts = Gifts::where('location_id', $this->id)->get();
         return $gifts;
     }
+    
+    public function scopeFilterByProject($query, $filter) {
+        return $query->whereHas('project', function($project) use ($filter) {
+                    $project->whereIn('id', $filter);
+                });
+    }
 }

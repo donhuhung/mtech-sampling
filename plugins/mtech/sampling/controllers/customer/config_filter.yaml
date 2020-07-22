@@ -1,0 +1,10 @@
+scopes:
+  location:
+      label: Location
+      modelClass: Mtech\Sampling\Models\Locations
+      nameFrom: location_name
+      scope: filterByLocation
+  created_at:
+        label: Date
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'

@@ -1,0 +1,6 @@
+scopes:
+  project:
+      label: Project/Campaign
+      modelClass: Mtech\Sampling\Models\Projects
+      nameFrom: project_name
+      scope: filterByProject

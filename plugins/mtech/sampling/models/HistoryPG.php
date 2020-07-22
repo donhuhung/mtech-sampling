@@ -1,14 +1,15 @@
-<?php namespace Mtech\Sampling\Models;
+<?php
+
+namespace Mtech\Sampling\Models;
 
 use Model;
 
 /**
  * Model
  */
-class HistoryPG extends Model
-{
+class HistoryPG extends Model {
+
     use \October\Rain\Database\Traits\Validation;
-    
 
     /**
      * @var string The database table used by the model.
@@ -18,9 +19,9 @@ class HistoryPG extends Model
     /**
      * @var array Validation rules
      */
-    public $rules = [];        
-    
-        /**
+    public $rules = [];
+
+    /**
      * @var array Relations
      */
     public $hasOne = [];
@@ -32,4 +33,11 @@ class HistoryPG extends Model
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
+
+    public function scopeFilterByUser($query, $filter) {
+        return $query->whereHas('user', function($user) use ($filter) {
+                    $user->whereIn('id', $filter);
+                });
+    }
+
 }

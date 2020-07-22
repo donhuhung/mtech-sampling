@@ -38,4 +38,10 @@ class Customers extends Model
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
+    
+    public function scopeFilterByLocation($query, $filter) {
+        return $query->whereHas('location', function($location) use ($filter) {
+                    $location->whereIn('id', $filter);
+                });
+    }
 }
