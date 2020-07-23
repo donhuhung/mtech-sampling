@@ -41,7 +41,9 @@ class User extends General {
      *     required=true,
      *    @SWG\Schema(example={
      *         "email": "test@gmail.com",
-     *         "password": "123456789"
+     *         "password": "123456789",
+     *         "longitude": "132121",
+     *         "latitude": "4343434",
      *      })
      *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
@@ -54,6 +56,8 @@ class User extends General {
             $email = $request->get('email');
             $password = $request->get('password');
             $phone = $request->get('phone');
+            $longitude = $request->get('longitude');
+            $latitude = $request->get('latitude');
             $credentials = $request->only('email', 'password');
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->respondWithError('Email or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
@@ -80,7 +84,7 @@ class User extends General {
                     $user->access_token = $token;
                 }
                 $results['data']['access_token'] = $token;
-                $this->updateHistory($user, true);
+                $this->updateHistory($user, true, $latitude, $longitude);
                 return $this->respondWithSuccess($results, "Login succesful!");
             } else {
                 return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
@@ -153,6 +157,7 @@ class User extends General {
             $user->password = $password;
             $user->password_confirmation = $password;
             $user->reset_password_code = $password;
+            $user->change_password = 0;
             $user->is_activated = 0;
             $user->save();
 
@@ -246,6 +251,7 @@ class User extends General {
             }
             $user->password = $newPassword;
             $user->password_confirmation = $confirmPassword;
+            $user->change_password = 1;
             $user->save();
 
             return $this->respondWithMessage("Change Password succesfully!");
@@ -342,7 +348,7 @@ class User extends General {
         }
     }
 
-    protected function updateHistory($user, $is_login) {
+    protected function updateHistory($user, $is_login, $latitude = null, $longitude = null) {
         $userId = $user->id;
         $checkHistory = $this->checkHistoryPG($userId, $is_login);
         if (!$checkHistory) {
@@ -357,6 +363,8 @@ class User extends General {
                     $data[] = [
                         'user_id' => $userId,
                         'location_id' => $location_id,
+                        'longitude' => $longitude,
+                        'latitude' => $latitude,
                         'login_time' => date('Y-m-d H:i:s')
                     ];
                 }

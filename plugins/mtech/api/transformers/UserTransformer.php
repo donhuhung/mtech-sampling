@@ -17,7 +17,7 @@ class UserTransformer extends Fractal\TransformerAbstract
             'email'            => (string) $user->email,            
             'phone'            => (string) $user->phone, 
             'location'         => $this->parseUserLocation($user->locations),
-            'change_password'  => $user->reset_password_code?true:false,
+            'change_password'  => $user->change_password?true:false,
             'createdAt' => Carbon::parse($user->created_at)->format('Y-m-d'),
             'updatedAt' => Carbon::parse($user->updated_at)->format('Y-m-d'),
         ];

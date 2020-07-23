@@ -126,3 +126,9 @@
 1.0.43:
     - 'Updated table mtech_sampling_customer'
     - builder_table_update_mtech_sampling_customer_8.php
+1.0.44:
+    - 'Updated table mtech_sampling_history_pg'
+    - builder_table_update_mtech_sampling_history_pg_5.php
+1.0.45:
+    - 'Updated table mtech_sampling_history_pg'
+    - builder_table_update_mtech_sampling_history_pg_6.php
