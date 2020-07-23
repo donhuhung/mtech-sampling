@@ -205,14 +205,14 @@ class Plugin extends PluginBase {
                     ],
                     'customer' => [
                         'label' => 'Customer Info',
-                        'icon' => 'icon-gift',
+                        'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/customer'),
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'Report Detail',
                     ],
                     'historypg' => [
                         'label' => 'PG Info',
-                        'icon' => 'icon-gift',
+                        'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/historypg'),
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'Report Detail',

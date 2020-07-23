@@ -14,6 +14,9 @@ Route::group([
     });
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('user')->group(function () {
         Route::post('/logout', 'Mtech\Api\Controllers\User@logout');               
+        Route::post('/change-password', 'Mtech\Api\Controllers\User@changePassword');               
+        Route::post('/checkin', 'Mtech\Api\Controllers\User@userCheckin');               
+        Route::post('/checkout', 'Mtech\Api\Controllers\User@userCheckout');               
     });
     
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('config')->group(function () {

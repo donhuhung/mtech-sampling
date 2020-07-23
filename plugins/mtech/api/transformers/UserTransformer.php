@@ -15,10 +15,27 @@ class UserTransformer extends Fractal\TransformerAbstract
             'name'        => (string) $user->name,
             'username'         => (string) $user->last_name,                        
             'email'            => (string) $user->email,            
-            'phone'            => (string) $user->phone,  
+            'phone'            => (string) $user->phone, 
+            'location'         => $this->parseUserLocation($user->locations),
             'change_password'  => $user->reset_password_code?true:false,
             'createdAt' => Carbon::parse($user->created_at)->format('Y-m-d'),
             'updatedAt' => Carbon::parse($user->updated_at)->format('Y-m-d'),
         ];
+    }
+    
+    private function parseUserLocation($locations){
+        foreach($locations as $location){
+            unset($location->pivot);
+            unset($location->updated_at);
+            unset($location->created_at);
+            unset($location->district_id);
+            unset($location->end_date);
+            unset($location->start_date);
+            unset($location->gift_inventory);
+            unset($location->total_gift);
+            unset($location->project_id);            
+            unset($location->gift_run);
+        }
+        return $locations;
     }
 }

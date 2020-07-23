@@ -93,6 +93,7 @@ class HelperClass {
       //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
       return $str;
   }
+    
 }
 
 ?>

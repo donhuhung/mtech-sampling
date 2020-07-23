@@ -11,10 +11,18 @@ columns:
         type: text
         searchable: true
         sortable: true
+    checkin_image:
+        label: Checkin Image
+        type: partial
+        path: ~/plugins/mtech/sampling/models/historypg/_checkin_image.htm        
     logout_time:
         label: Logout
         type: text
         sortable: true
+    checkout_image:
+        label: Checkout Image
+        type: partial
+        path: ~/plugins/mtech/sampling/models/historypg/_checkout_image.htm
     created_at:
         label: 'Created Date'
         type: datetime
