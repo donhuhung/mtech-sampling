@@ -17,6 +17,7 @@ fields:
         label: 'Gift Runed'
         span: auto
         type: number
+        default: 0
     gift_inventory:
         label: 'Gift Inventory'
         span: auto

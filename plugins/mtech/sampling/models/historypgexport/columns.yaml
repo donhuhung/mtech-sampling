@@ -1,0 +1,10 @@
+columns:
+    login_time:
+        label: Login
+        type: text
+    logout_time:
+        label: Logout
+        type: text
+    created_at:
+        label: 'Created Date'
+        type: datetime

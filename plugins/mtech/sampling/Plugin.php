@@ -224,13 +224,13 @@ class Plugin extends PluginBase {
                         'permissions' => ['mtech.sampling.*'],
                         'counterLabel' => 'Setting',
                     ],
-                    'customergift' => [
-                        'label' => 'Customer Gifts',
-                        'icon' => 'icon-history',
-                        'url' => Backend::url('mtech/sampling/customergift'),
-                        'permissions' => ['mtech.sampling.*'],
-                        'counterLabel' => 'History',
-                    ]
+                    // 'customergift' => [
+                    //     'label' => 'Customer Gifts',
+                    //     'icon' => 'icon-history',
+                    //     'url' => Backend::url('mtech/sampling/customergift'),
+                    //     'permissions' => ['mtech.sampling.*'],
+                    //     'counterLabel' => 'History',
+                    // ]
                 ]
             ],
         ];

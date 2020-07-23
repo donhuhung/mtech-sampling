@@ -16,8 +16,11 @@ class Location extends Controller {
     public $implement = [
         'Backend.Behaviors.FormController',
         'Backend.Behaviors.ListController',
-        'Backend.Behaviors.RelationController'
+        'Backend.Behaviors.RelationController',
+        'Backend.Behaviors.ImportExportController',
     ];
+
+    public $importExportConfig = 'config_import_export.yaml';
 
     /**
      * @var string Configuration file for the `FormController` behavior.
