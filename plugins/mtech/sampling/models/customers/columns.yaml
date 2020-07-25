@@ -13,7 +13,8 @@ columns:
         type: text
     gender:
         label: gender
-        type: number
+        type: partial
+        path: ~/plugins/mtech/sampling/models/customers/_show_gender.htm
     phone:
         label: phone
         type: text
