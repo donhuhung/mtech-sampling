@@ -5,19 +5,25 @@ columns:
     location_name:
         label: Location
         type: text
+        searchable: true
     project_id:
         label: Project
         relation: project
         select: project_name
+        searchable: true
     total_gift:
         label: 'Total Gift'
         type: number
+        default: 0
+        searchable: true
     gift_run:
         label: 'Gift Run'
         type: number
+        default: 0
     gift_inventory:
         label: 'Gift Inventory'
         type: number
+        default: 0
     start_date:
         label: 'Start Date'
         type: text

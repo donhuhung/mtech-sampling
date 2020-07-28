@@ -63,3 +63,7 @@ fields:
         label: 'Capture Image Customer'
         span: auto
         type: switch
+    view_inventory:
+        label: 'View Inventory'
+        span: auto
+        type: switch

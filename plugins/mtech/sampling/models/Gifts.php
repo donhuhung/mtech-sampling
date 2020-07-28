@@ -33,7 +33,7 @@ class Gifts extends Model {
     public $belongsTo = [
         'category' => ['Mtech\Sampling\Models\CategoryGifts', 'key' => 'category_gift'],
         'productBrand' => ['Mtech\Sampling\Models\ProductBrands', 'key' => 'product_brand'],
-        'location' => ['Mtech\Sampling\Models\Locations']
+        'location' => ['Mtech\Sampling\Models\Locations','key' => 'location_id']
     ];
     public $belongsToMany = [];
     public $morphTo = [];
@@ -89,6 +89,16 @@ class Gifts extends Model {
         $model_user_receive['location_id'] = $location_id;
         $model_user_receive->save();
         return true;
+    }
+    
+    public function getLocationIdOptions(){
+        $locations = Locations::get();
+        $arrLocation = [];
+        foreach($locations as $location){
+            $projectName = $location->project->project_name;            
+            $arrLocation[$location->id] = $location->location_name . ' - ' . $projectName;
+        }
+        return $arrLocation;
     }
 
 }

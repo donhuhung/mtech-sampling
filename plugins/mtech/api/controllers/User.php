@@ -58,7 +58,12 @@ class User extends General {
             $phone = $request->get('phone');
             $longitude = $request->get('longitude');
             $latitude = $request->get('latitude');
-            $credentials = $request->only('email', 'password');
+            if($phone){
+                $credentials = $request->only('phone', 'password');
+            }            
+            else{
+                $credentials = $request->only('email', 'password');
+            }
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->respondWithError('Email or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
             }

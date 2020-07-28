@@ -1,1 +1,5 @@
+<?php if($record->checkin_image && $record->checkin_image != "null"){?>
 <img src="/storage/app/media/<?= $record->checkin_image ?>" width="120" height="120"/>
+<?php }else {
+echo "No Image";
+}?>

@@ -187,10 +187,10 @@ class Plugin extends PluginBase {
                         'permissions' => ['mtech.sampling.gift'],
                         'counterLabel' => 'Sampling',
                     ],
-                    'customer' => [
+                    'customergift' => [
                         'label' => 'Customer Info',
                         'icon' => 'icon-address-card-o',
-                        'url' => Backend::url('mtech/sampling/customer'),
+                        'url' => Backend::url('mtech/sampling/customergift'),
                         'permissions' => ['mtech.sampling.customer'],
                         'counterLabel' => 'Report Detail',
                     ],
@@ -208,18 +208,18 @@ class Plugin extends PluginBase {
                         'permissions' => ['mtech.sampling.configapp'],
                         'counterLabel' => 'Setting',
                     ],
-                    // 'customergift' => [
-                    //     'label' => 'Customer Gifts',
-                    //     'icon' => 'icon-history',
-                    //     'url' => Backend::url('mtech/sampling/customergift'),
-                    //     'permissions' => ['mtech.sampling.*'],
-                    //     'counterLabel' => 'History',
-                    // ]
+                // 'customergift' => [
+                //     'label' => 'Customer Gifts',
+                //     'icon' => 'icon-history',
+                //     'url' => Backend::url('mtech/sampling/customergift'),
+                //     'permissions' => ['mtech.sampling.*'],
+                //     'counterLabel' => 'History',
+                // ]
                 ]
             ],
         ];
     }
-    
+
     /**
      * Registers any back-end permissions used by this plugin.
      *
@@ -269,6 +269,19 @@ class Plugin extends PluginBase {
                 'label' => 'Customer'
             ],
         ];
+    }
+
+    public function registerListColumnTypes() {
+        return [
+            // A local method, i.e $this->evalUppercaseListColumn()
+            'location-project' => [$this, 'locationProject'],
+        ];
+    }
+
+    public function locationProject($value, $column, $record) {
+        if($record->location){
+            return $record->location->location_name . ' - '.$record->location->project->project_name;        
+        }        
     }
 
 }

@@ -2,32 +2,25 @@ columns:
     id:
         label: id
         type: number
-    name:
-        label: name
-        type: text
-    cmnd:
-        label: cmnd
-        type: text
-    dob:
-        label: dob
-        type: text
-    gender:
-        label: gender
-        type: partial
-        path: ~/plugins/mtech/sampling/models/customers/_show_gender.htm
-    phone:
-        label: phone
-        type: text
-    address:
-        label: address
-        type: text
-    otp:
-        label: otp
-        type: text
+    customer_id:
+        label: Customer
+        relation: customer
+        select: name
+    gift_id:
+        label: Gift
+        relation: gift
+        select: gift_name
+    brand_in_use:
+        label: Brand In Use
+        relation: customer
+        select: brand_in_use
+    product_name:
+        label: Product Name
+        relation: customer
+        select: product_name
     location_id:
         label: Location
-        relation: location
-        select: location_name
+        type: location-project        
     created_at:
         label: created_at
         type: datetime

@@ -23,6 +23,12 @@ columns:
         label: Checkout Image
         type: partial
         path: ~/plugins/mtech/sampling/models/historypg/_checkout_image.htm
-    created_at:
-        label: 'Created Date'
-        type: datetime
+    location_id:
+        label: Location
+        type: location-project  
+    longitude:
+        label: Longitude
+        type: text
+    latitude:
+        label: Latitude
+        type: text

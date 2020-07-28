@@ -1,1 +1,5 @@
+<?php if($record->checkout_image && $record->checkout_image != "null"){?>
 <img src="/storage/app/media/<?= $record->checkout_image ?>" width="120" height="120"/>
+<?php }else {
+echo "No Image";
+}?>

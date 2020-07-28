@@ -246,6 +246,9 @@ class Customer extends General {
      *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
      * @SWG\Response(response=500, description="Internal server error!"),
+     *   security={
+     *     {"bearerAuth":{}}
+     *   }
      * )
      */
     public function checkPhone(Request $request) {
@@ -256,7 +259,7 @@ class Customer extends General {
             if ($customer) {
                 return $this->respondWithError('Account existing. Please try again!', self::HTTP_BAD_REQUEST);
             }
-            return $this->respondWithMessage("Account does not exist!");
+            return $this->respondWithMessage("Account is valid!");
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }

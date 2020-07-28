@@ -23,6 +23,7 @@ class SettingTransformer extends Fractal\TransformerAbstract {
             'product_name' => $config->product_name,
             'product_sampling' => $config->product_sampling,
             'allow_capture_customer' => $config->allow_capture_customer,
+            'view_inventory' => $config->view_inventory,
             'time_not_login_from' => $config->time_not_login_from,
             'time_not_login_to' => $config->time_not_login_to,
             'createdAt' => Carbon::parse($config->created_at)->format('Y-m-d'),

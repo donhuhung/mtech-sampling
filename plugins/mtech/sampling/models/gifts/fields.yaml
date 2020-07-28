@@ -22,12 +22,11 @@ fields:
         descriptionFrom: description
         span: auto
         type: relation
-    location:
+    location_id:
         label: Location
-        nameFrom: location_name
         descriptionFrom: description
         span: auto
-        type: relation
+        type: dropdown
     productBrand:
         label: 'Product Brand'
         nameFrom: name

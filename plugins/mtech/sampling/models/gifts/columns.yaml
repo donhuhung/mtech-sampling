@@ -7,12 +7,7 @@ columns:
         type: text
     location_id:
         label: Location
-        relation: location
-        select: location_name
-    project:
-        label: Project
-        relation: location
-        select: project_id
+        type: location-project        
     category_gift:
         label: Category
         relation: category

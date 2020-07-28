@@ -3,20 +3,41 @@ columns:
         label: id
         type: number
     customer_id:
-        label: customer_id
+        label: Customer
         relation: customer
         select: name
+    cmnd:
+        label: Card Id
+        relation: customer
+        select: cmnd
+    dob:
+        label: DOB
+        relation: customer
+        select: dob
+    phone:
+        label: Phone
+        relation: customer
+        select: phone
+    address:
+        label: Address
+        relation: customer
+        select: address
+    otp:
+        label: OTP
+        relation: customer
+        select: otp
     gift_id:
-        label: gift_id
+        label: Gift
         relation: gift
         select: gift_name
+    brand_in_use:
+        label: Brand In Use
+        relation: customer
+        select: brand_in_use
+    product_name:
+        label: Product Name
+        relation: customer
+        select: product_name
     location_id:
-        label: location_id
-        relation: location
-        select: location_name
-    created_at:
-        label: created_at
-        type: datetime
-    updated_at:
-        label: updated_at
-        type: datetime
+        label: Location
+        type: location-project        

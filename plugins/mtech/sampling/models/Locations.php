@@ -27,10 +27,10 @@ class Locations extends Model
      */
     public $hasOne = [];
     public $hasMany = [
-        'gift' => ['Mtech\Sampling\Models\Gifts','key' => 'id', 'otherKey' => 'location_id'],        
+        'gift' => ['Mtech\Sampling\Models\Gifts','key' => 'location_id', 'otherKey' => 'id'],        
     ];
     public $belongsTo = [
-        'project' => 'Mtech\Sampling\Models\Projects',        
+        'project' => ['Mtech\Sampling\Models\Projects','key' => 'project_id'],        
         'district' => 'Mtech\Sampling\Models\Districts'
     ];
     public $belongsToMany = [

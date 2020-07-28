@@ -138,3 +138,6 @@
 1.0.47:
     - 'Updated table mtech_sampling_config_app'
     - builder_table_update_mtech_sampling_config_app_4.php
+1.0.48:
+    - 'Updated table mtech_sampling_config_app'
+    - builder_table_update_mtech_sampling_config_app_5.php
