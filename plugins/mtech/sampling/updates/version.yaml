@@ -132,3 +132,9 @@
 1.0.45:
     - 'Updated table mtech_sampling_history_pg'
     - builder_table_update_mtech_sampling_history_pg_6.php
+1.0.46:
+    - 'Created table mtech_sampling_backend_users_projects'
+    - builder_table_create_mtech_sampling_backend_users_projects.php
+1.0.47:
+    - 'Updated table mtech_sampling_config_app'
+    - builder_table_update_mtech_sampling_config_app_4.php

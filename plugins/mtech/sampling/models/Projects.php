@@ -28,7 +28,14 @@ class Projects extends Model
     public $hasOne = [];
     public $hasMany = [];
     public $belongsTo = [];
-    public $belongsToMany = [];
+    public $belongsToMany = [
+        'usersBackend' => [
+            'Backend\Models\User', 
+            'table' => 'mtech_sampling_backend_users_projects',
+            'key'      => 'project_id',
+            'otherKey' => 'user_id'
+            ]
+    ];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];

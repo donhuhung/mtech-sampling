@@ -5,6 +5,7 @@ use Event;
 use Backend;
 use BackendAuth;
 use October\Rain\Auth\Models\User as UserBase;
+use Mtech\Sampling\Models\Projects;
 
 /**
  * Administrator user model
@@ -46,7 +47,8 @@ class User extends UserBase
      * Relations
      */
     public $belongsToMany = [
-        'groups' => [UserGroup::class, 'table' => 'backend_users_groups']
+        'groups' => [UserGroup::class, 'table' => 'backend_users_groups'],
+        'projects' => [Projects::class, 'table' => 'mtech_sampling_backend_users_projects', 'key' =>'user_id','otherKey' => 'project_id'],
     ];
 
     public $belongsTo = [
@@ -187,6 +189,17 @@ class User extends UserBase
 
         foreach (UserRole::all() as $role) {
             $result[$role->id] = [$role->name, $role->description];
+        }
+
+        return $result;
+    }
+    
+    public function getProjectsOptions()
+    {
+        $result = [];
+
+        foreach (Projects::all() as $project) {
+            $result[$project->id] = [$project->project_name];
         }
 
         return $result;

@@ -5,10 +5,6 @@ fields:
         descriptionFrom: description
         span: auto
         type: relation
-    number_receive_gift:
-        label: 'Number Receive Gift'
-        span: auto
-        type: text
     time_not_login_from:
         label: 'Time Not Allow Login From'
         mode: time
@@ -62,4 +58,8 @@ fields:
     status:
         label: Status
         span: auto
-        type: switch    
+        type: switch
+    allow_capture_customer:
+        label: 'Capture Image Customer'
+        span: auto
+        type: switch

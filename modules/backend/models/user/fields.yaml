@@ -57,6 +57,12 @@ tabs:
             label: backend::lang.user.role_field
             commentAbove: backend::lang.user.role_comment
             type: radio
+            
+        projects:
+            context: [create, update]
+            label: Projects
+            commentAbove: backend::lang.user.groups_comment
+            type: checkboxlist            
 
         groups:
             context: [create, update]
@@ -64,6 +70,7 @@ tabs:
             commentAbove: backend::lang.user.groups_comment
             type: checkboxlist
             tab: backend::lang.user.groups
+                
 
 secondaryTabs:
     fields:

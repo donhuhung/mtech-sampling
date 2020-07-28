@@ -31,10 +31,14 @@ Route::group([
     
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('customer')->group(function () {
         Route::post('/store', 'Mtech\Api\Controllers\Customer@storeCustomer');
+        Route::post('/check-phone', 'Mtech\Api\Controllers\Customer@checkPhone');
+        Route::post('/update-bill', 'Mtech\Api\Controllers\Customer@updateBill');
+        Route::post('/update-avatar', 'Mtech\Api\Controllers\Customer@updateAvatar');
     });
     
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('gift')->group(function () {
         Route::post('/list', 'Mtech\Api\Controllers\Gift@getListGift');
+        Route::post('/catch-gift', 'Mtech\Api\Controllers\Gift@catchGift');
     });
     
 });

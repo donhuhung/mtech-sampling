@@ -9,6 +9,10 @@ columns:
         label: Location
         relation: location
         select: location_name
+    project:
+        label: Project
+        relation: location
+        select: project_id
     category_gift:
         label: Category
         relation: category

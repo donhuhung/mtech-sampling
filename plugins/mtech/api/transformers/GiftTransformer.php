@@ -14,6 +14,8 @@ class GiftTransformer extends Fractal\TransformerAbstract
             'id'               => (int) $gift->id,
             'name'        => (string) $gift->gift_name,
             'image'         => (string) $gift->gift_image,         
+            'number_gift' => (int)$gift->gift_inventory,
+            'total_gift' => (int)$gift->total_gift,
             'path' => '/storage/app/media',
             'createdAt' => Carbon::parse($gift->created_at)->format('Y-m-d'),
         ];

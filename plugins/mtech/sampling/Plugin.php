@@ -77,8 +77,8 @@ class Plugin extends PluginBase {
                     'label' => 'Gender',
                     'type' => 'dropdown',
                     'options' => [
-                        'Male' => 'Male',
-                        'Female' => 'Female'
+                        '1' => 'Male',
+                        '2' => 'Female'
                     ],
                     'tab' => 'rainlab.user::lang.user.account',
                     'span' => 'auto',
@@ -118,22 +118,6 @@ class Plugin extends PluginBase {
     }
 
     /**
-     * Registers any back-end permissions used by this plugin.
-     *
-     * @return array
-     */
-    public function registerPermissions() {
-        return []; // Remove this line to activate
-
-        return [
-            'aura.backend.some_permission' => [
-                'tab' => 'Backend',
-                'label' => 'Some permission'
-            ],
-        ];
-    }
-
-    /**
      * Registers back-end navigation items for this plugin.
      *
      * @return array
@@ -151,77 +135,77 @@ class Plugin extends PluginBase {
                         'label' => 'Provinces',
                         'icon' => 'icon-sitemap',
                         'url' => Backend::url('mtech/sampling/province'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.province'],
                         'counterLabel' => 'General',
                     ],
                     'district' => [
                         'label' => 'Districts',
                         'icon' => 'icon-map-marker',
                         'url' => Backend::url('mtech/sampling/district'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.district'],
                         'counterLabel' => 'General',
                     ],
                     'productbrand' => [
                         'label' => 'Product brands',
                         'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/productbrand'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.productbrand'],
                         'counterLabel' => 'General',
                     ],
                     'categorygift' => [
                         'label' => 'Category Gifts',
                         'icon' => 'icon-gift',
                         'url' => Backend::url('mtech/sampling/categorygift'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.categorygift'],
                         'counterLabel' => 'General',
                     ],
                     'productsampling' => [
                         'label' => 'Product Sampling',
                         'icon' => 'icon-newspaper-o',
                         'url' => Backend::url('mtech/sampling/productsampling'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.productsampling'],
                         'counterLabel' => 'General',
                     ],
                     'project' => [
                         'label' => 'Projects',
                         'icon' => 'icon-list',
                         'url' => Backend::url('mtech/sampling/project'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.project'],
                         'counterLabel' => 'Sampling',
                     ],
                     'location' => [
                         'label' => 'Locations',
                         'icon' => 'icon-map-marker',
                         'url' => Backend::url('mtech/sampling/location'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.location'],
                         'counterLabel' => 'Sampling',
                     ],
                     'gift' => [
                         'label' => 'Gifts',
                         'icon' => 'icon-gift',
                         'url' => Backend::url('mtech/sampling/gift'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.gift'],
                         'counterLabel' => 'Sampling',
                     ],
                     'customer' => [
                         'label' => 'Customer Info',
                         'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/customer'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.customer'],
                         'counterLabel' => 'Report Detail',
                     ],
                     'historypg' => [
                         'label' => 'PG Info',
                         'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/historypg'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.historypg'],
                         'counterLabel' => 'Report Detail',
                     ],
                     'configapp' => [
                         'label' => 'Config App',
                         'icon' => 'icon-cog',
                         'url' => Backend::url('mtech/sampling/configapp'),
-                        'permissions' => ['mtech.sampling.*'],
+                        'permissions' => ['mtech.sampling.configapp'],
                         'counterLabel' => 'Setting',
                     ],
                     // 'customergift' => [
@@ -232,6 +216,57 @@ class Plugin extends PluginBase {
                     //     'counterLabel' => 'History',
                     // ]
                 ]
+            ],
+        ];
+    }
+    
+    /**
+     * Registers any back-end permissions used by this plugin.
+     *
+     * @return array
+     */
+    public function registerPermissions() {
+
+        return [
+            'mtech.sampling.province' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Province'
+            ],
+            'mtech.sampling.district' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'District'
+            ],
+            'mtech.sampling.productbrand' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Product Brand'
+            ],
+            'mtech.sampling.categorygift' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Category Gift'
+            ],
+            'mtech.sampling.productsampling' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Product Sampling'
+            ],
+            'mtech.sampling.project' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Project'
+            ],
+            'mtech.sampling.location' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Location'
+            ],
+            'mtech.sampling.project' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Project'
+            ],
+            'mtech.sampling.gift' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Gift'
+            ],
+            'mtech.sampling.customer' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Customer'
             ],
         ];
     }

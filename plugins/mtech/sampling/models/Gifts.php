@@ -61,7 +61,7 @@ class Gifts extends Model {
                 array_push($arrLocation, $location->id);
             }
             for ($i = 0; $i < $numberReceiveGift; $i++) {
-                $data = $this->whereRaw('total_gift > 0 ')
+                $data = $this->whereRaw('gift_inventory > 0 ')
                         ->whereIn('location_id', $arrLocation)
                         ->orderByRaw('RAND()')
                         ->first();
@@ -69,8 +69,8 @@ class Gifts extends Model {
                     $gift_id = $data->id;
                     $location_id = $data->location_id;
                     //update number gift random    
-                    Db::table('mtech_sampling_locations')->where('id', $location_id)->decrement('total_gift');
-                    Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('total_gift');
+                    Db::table('mtech_sampling_locations')->where('id', $location_id)->decrement('gift_inventory');
+                    Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('gift_inventory');
                     $this->insertUserReceiveGift($user_id, $gift_id, $location_id);
                     array_push($arrGift, $gift_id);
                 }
