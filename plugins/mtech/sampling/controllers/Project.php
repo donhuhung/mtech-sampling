@@ -43,7 +43,7 @@ class Project extends Controller {
         $userGroups = $user->groups;
         if ($userGroups) {
             foreach ($userGroups as $group) {
-                if ($group->code == "quan-ly-du-an") {
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
                     $query->whereHas('usersBackend', function ( $q ) use ($userId) {
                         $q->where('user_id', $userId);
                     });
