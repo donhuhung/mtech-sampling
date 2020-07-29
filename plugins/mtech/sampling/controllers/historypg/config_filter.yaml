@@ -4,6 +4,11 @@ scopes:
       modelClass: RainLab\User\Models\User
       nameFrom: name
       scope: filterByUser
+  location:
+      label: Location
+      modelClass: Mtech\Sampling\Models\Locations
+      nameFrom: location_name
+      scope: filterByLocation
   created_at:
         label: Date
         type: daterange

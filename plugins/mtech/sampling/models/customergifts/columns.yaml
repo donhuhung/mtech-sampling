@@ -6,22 +6,27 @@ columns:
         label: Customer
         relation: customer
         select: name
+        searchable: true
     cmnd:
         label: Card Id
         relation: customer
         select: cmnd
+        searchable: true
     dob:
         label: DOB
         relation: customer
         select: dob
+        searchable: true
     phone:
         label: Phone
         relation: customer
         select: phone
+        searchable: true
     address:
         label: Address
         relation: customer
         select: address
+        searchable: true
     otp:
         label: OTP
         relation: customer
@@ -30,14 +35,22 @@ columns:
         label: Gift
         relation: gift
         select: gift_name
+        searchable: true
     brand_in_use:
         label: Brand In Use
         relation: customer
         select: brand_in_use
+        searchable: true
     product_name:
         label: Product Name
         relation: customer
         select: product_name
+        searchable: true
     location_id:
         label: Location
-        type: location-project        
+        type: location-project  
+        searchable: true
+    customer:
+        label: Product Sampling
+        type: product_sampling        
+        searchable: true

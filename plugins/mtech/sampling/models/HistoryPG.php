@@ -41,4 +41,10 @@ class HistoryPG extends Model {
                 });
     }
 
+    public function scopeFilterByLocation($query, $filter) {
+        return $query->whereHas('location', function($project) use ($filter) {
+                    $project->whereIn('id', $filter);
+                });
+    }
+
 }

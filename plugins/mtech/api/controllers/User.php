@@ -294,8 +294,13 @@ class User extends General {
             $userId = $user->id;
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
-                $destinationPath = storage_path('app/media/' . $userId . '/' . $now . '/');
-                $fileName = $userId . "_checkin.png";
+                $locationId = $user->location_id;
+                $projectId = $user->location->project_id;               
+                $prefixName = $user->name;
+                $fileName = HelperClass::convert_vi_to_en($prefixName);
+                $fileName = preg_replace('/\s+/', '_', $fileName);
+                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');                                
+                $fileName = $fileName . "_checkin.png";
                 $userImage->move($destinationPath, $fileName);
                 $historyPG = $this->checkHistoryPG($userId, true);
                 $historyPG->checkin_image = $userId.'/'.$now.'/'.$fileName;
@@ -338,8 +343,13 @@ class User extends General {
             $userId = $user->id;
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
-                $destinationPath = storage_path('app/media/' . $userId . '/' . $now . '/');
-                $fileName = $userId . "_checkout.png";
+                $locationId = $user->location_id;
+                $projectId = $user->location->project_id;               
+                $prefixName = $user->name;
+                $fileName = HelperClass::convert_vi_to_en($prefixName);
+                $fileName = preg_replace('/\s+/', '_', $fileName);
+                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');           
+                $fileName = $fileName . "_checkout.png";
                 $userImage->move($destinationPath, $fileName);
                 $historyPG = $this->checkHistoryPG($userId, true);
                 $historyPG->checkout_image = $userId.'/'.$now.'/'.$fileName;

@@ -9,6 +9,9 @@ use Event;
 use Mail;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Controllers\Users as UserController;
+use Mtech\Sampling\Models\Customers;
+use Mtech\Sampling\Models\CustomerGifts;
+use Mtech\Sampling\Models\Locations;
 
 class Plugin extends PluginBase {
 
@@ -273,15 +276,66 @@ class Plugin extends PluginBase {
 
     public function registerListColumnTypes() {
         return [
-            // A local method, i.e $this->evalUppercaseListColumn()
             'location-project' => [$this, 'locationProject'],
+            'product_sampling' => [$this, 'productSampling'],
+            'calculate_date_project' => [$this, 'calculateDateProject'],
+            'total_gift_project' => [$this, 'totalGiftProject'],
+            'total_gift_runed_project' => [$this, 'totalGiftRunnedProject'],
+            'total_gift_inventory_project' => [$this, 'totalGiftInventoryProject'],
         ];
     }
 
     public function locationProject($value, $column, $record) {
-        if($record->location){
-            return $record->location->location_name . ' - '.$record->location->project->project_name;        
-        }        
+        if ($record->location) {
+            return $record->location->location_name . ' - ' . $record->location->project->project_name;
+        }
+    }
+
+    public function productSampling($value, $column, $record) {
+        $customerGift = CustomerGifts::find($record->id);
+        return $customerGift->customer->productSampling->name;
+    }
+
+    public function calculateDateProject($value, $column, $record) {
+        $now = date('Y-m-d H:i:s');
+        $startDate = $record->start_date;
+        $endDate = $record->end_date;
+        $totalDate = date_diff(date_create($endDate), date_create($startDate));
+        $totalDate = $totalDate->format("%a");
+
+        $dateMade = date_diff(date_create($now), date_create($startDate));
+        $dateMade = $dateMade->format("%a");
+        return $dateMade . '/' . $totalDate;
+    }
+
+    public function totalGiftProject($value, $column, $record) {
+        $projectId = $record->id;
+        $locations = Locations::where('project_id', $projectId)->get();
+        $totalGift = 0;
+        foreach ($locations as $location) {
+            $totalGift += $location->total_gift;
+        }
+        return $totalGift;
+    }
+
+    public function totalGiftRunnedProject($value, $column, $record) {
+        $projectId = $record->id;
+        $locations = Locations::where('project_id', $projectId)->get();
+        $totalGiftRunned = 0;
+        foreach ($locations as $location) {
+            $totalGiftRunned += $location->total_gift - $location->gift_inventory;
+        }
+        return $totalGiftRunned;
+    }
+
+    public function totalGiftInventoryProject($value, $column, $record) {
+        $projectId = $record->id;
+        $locations = Locations::where('project_id', $projectId)->get();
+        $totalGiftInventory = 0;
+        foreach ($locations as $location) {
+            $totalGiftInventory += $location->gift_inventory;
+        }
+        return $totalGiftInventory;
     }
 
 }

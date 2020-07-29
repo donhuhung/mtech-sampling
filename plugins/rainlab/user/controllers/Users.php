@@ -139,6 +139,23 @@ class Users extends Controller
             return $redirect;
         }
     }
+    
+    /**
+     * Manually Block a user
+     */
+    public function preview_onBlockUser($recordId = null)
+    {
+        $model = $this->formFindModelObject($recordId);
+        $model->is_activated = 0;
+
+        $model->save();
+
+        Flash::success(Lang::get('rainlab.user::lang.users.activated_success'));
+
+        if ($redirect = $this->makeRedirect('update-close', $model)) {
+            return $redirect;
+        }
+    }
 
     /**
      * Manually unban a user

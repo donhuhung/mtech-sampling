@@ -21,3 +21,7 @@ fields:
         label: 'Allow Choose Gift'
         span: auto
         type: switch
+    kpi_day_gift:
+        label: KPI/Day
+        span: auto
+        type: text

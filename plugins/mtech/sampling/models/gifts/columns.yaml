@@ -5,13 +5,16 @@ columns:
     gift_name:
         label: gift_name
         type: text
+        searchable: true
     location_id:
         label: Location
         type: location-project        
+        searchable: true
     category_gift:
         label: Category
         relation: category
         select: name
+        searchable: true
     location_id:
         label: Location
         relation: location
@@ -20,6 +23,7 @@ columns:
         label: 'Product Brand'
         relation: productBrand
         select: name
+        searchable: true
     total_gift:
         label: total_gift
         type: number

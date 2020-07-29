@@ -85,9 +85,9 @@ class Gift extends General {
      * )
      */
     public function catchGift(Request $request) {
-        try {
+        try {            
             $customnerID = $request->get('customer_id');
-            $arrGiftId = $request->get('arr_gift_id');
+            $arrGiftId = (array)$request->get('arr_gift_id');
             $customner = $this->customerRepository->find($customnerID);
             $projectID = $customner->location->project_id;
             $project = $this->projectRepository->find($projectID);
@@ -96,7 +96,7 @@ class Gift extends General {
             $numberReceiveGift = $project->number_receive_gift;
             if ($chooseGift) {
                 //Choose Gift From Client
-                if ($arrGiftId) {
+                if ($arrGiftId) {                       
                     foreach ($arrGiftId as $gift) {
                         Db::table('mtech_sampling_locations')->where('id', $locationId)->decrement('gift_inventory');
                         Db::table('mtech_sampling_gifts')->where('id', $gift)->decrement('gift_inventory');

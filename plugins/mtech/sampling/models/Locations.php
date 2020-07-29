@@ -58,5 +58,5 @@ class Locations extends Model
         return $query->whereHas('project', function($project) use ($filter) {
                     $project->whereIn('id', $filter);
                 });
-    }
+    }   
 }

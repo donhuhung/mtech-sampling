@@ -150,7 +150,7 @@ class Customer extends General {
                 $prefixName = $phone."_".$name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $now . '/'.$projectId.'/'.$locationId.'/');                
+                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');                
                 $fileNameAvatar = $fileName."_avatar.png";
                 $fileNameBill = $fileName."_bill.png";                
                 $billImage->move($destinationPath, $fileNameBill);
@@ -211,7 +211,7 @@ class Customer extends General {
                 $prefixName = $phone."_".$name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $now . '/'.$projectId.'/'.$locationId.'/');                
+                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');                
                 $fileNameAvatar = $fileName."_avatar.png";                                
                 $customerAvatar->move($destinationPath, $fileNameAvatar);                                
             }

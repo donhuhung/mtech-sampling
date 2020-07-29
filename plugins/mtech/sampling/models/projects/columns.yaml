@@ -1,10 +1,8 @@
 columns:
-    id:
-        label: id
-        type: number
     project_name:
         label: Project
         type: text
+        searchable: true
     start_date:
         label: 'Start Date'
         type: text
@@ -17,3 +15,18 @@ columns:
     allow_choose_gift:
         label: 'Allow Choose Gift'
         type: switch
+    id:
+        label: 'Date Made/Total Date'
+        type: calculate_date_project
+    total_gift:
+        label: 'Total Gift Runned'
+        type: total_gift_project
+    total_gift_runned:
+        label: 'Total Gift'
+        type: total_gift_runed_project
+    total_gift_inventory:
+        label: 'Total Gift Inventory'
+        type: total_gift_inventory_project
+    kpi_day_gift:
+        label: KPI/Day
+        type: text
