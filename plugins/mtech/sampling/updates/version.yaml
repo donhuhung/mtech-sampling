@@ -153,3 +153,6 @@
 1.0.52:
     - 'Updated table mtech_sampling_projects'
     - builder_table_update_mtech_sampling_projects_6.php
+1.0.53:
+    - 'Updated table mtech_sampling_config_app'
+    - builder_table_update_mtech_sampling_config_app_6.php

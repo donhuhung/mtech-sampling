@@ -58,10 +58,9 @@ class User extends General {
             $phone = $request->get('phone');
             $longitude = $request->get('longitude');
             $latitude = $request->get('latitude');
-            if($phone){
+            if ($phone) {
                 $credentials = $request->only('phone', 'password');
-            }            
-            else{
+            } else {
                 $credentials = $request->only('email', 'password');
             }
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -295,20 +294,20 @@ class User extends General {
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
                 $locationId = $user->location_id;
-                $projectId = $user->location->project_id;               
+                $projectId = $user->location->project_id;
                 $prefixName = $user->name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');                                
+                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
                 $fileName = $fileName . "_checkin.png";
                 $userImage->move($destinationPath, $fileName);
                 $historyPG = $this->checkHistoryPG($userId, true);
-                $historyPG->checkin_image = $userId.'/'.$now.'/'.$fileName;
+                $historyPG->checkin_image = $userId . '/' . $now . '/' . $fileName;
                 $historyPG->save();
                 return $this->respondWithMessage("Checkin succesfully!");
-            }else{
+            } else {
                 return $this->respondWithError('File Is Valid', self::HTTP_BAD_REQUEST);
-            }            
+            }
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }
@@ -344,20 +343,20 @@ class User extends General {
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
                 $locationId = $user->location_id;
-                $projectId = $user->location->project_id;               
+                $projectId = $user->location->project_id;
                 $prefixName = $user->name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/'.$locationId.'/'.$now.'/');           
+                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
                 $fileName = $fileName . "_checkout.png";
                 $userImage->move($destinationPath, $fileName);
                 $historyPG = $this->checkHistoryPG($userId, true);
-                $historyPG->checkout_image = $userId.'/'.$now.'/'.$fileName;
+                $historyPG->checkout_image = $userId . '/' . $now . '/' . $fileName;
                 $historyPG->save();
                 return $this->respondWithMessage("Checkout succesfully!");
-            }else{
+            } else {
                 return $this->respondWithError('File Is Valid', self::HTTP_BAD_REQUEST);
-            }            
+            }
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }
@@ -385,14 +384,15 @@ class User extends General {
                 }
                 HistoryPG::insert($data);
                 return 0;
+            } else {
+                $historyPgs = HistoryPG::where('user_id', $userId)->whereIn('location_id', $location_ids)
+                                ->whereNull('logout_time')->get();                
+                foreach ($historyPgs as $historyPg) {
+                    $historyPg->logout_time = date('Y-m-d H:i:s');
+                    $historyPg->save();
+                }
+                return 1;
             }
-            $historyPgs = HistoryPG::where('user_id', $userId)->whereIn('location_id', $location_ids)
-                            ->whereNull('logout_time')->get();
-            foreach ($historyPgs as $historyPg) {
-                $historyPg->logout_time = date('Y-m-d H:i:s');
-                $historyPg->save();
-            }
-            return 1;
         }
     }
 
