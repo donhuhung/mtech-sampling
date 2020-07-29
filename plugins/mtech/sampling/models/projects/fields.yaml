@@ -25,3 +25,7 @@ fields:
         label: KPI/Day
         span: auto
         type: text
+    status:
+        label: Status
+        span: auto
+        type: switch

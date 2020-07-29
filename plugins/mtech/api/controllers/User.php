@@ -293,17 +293,23 @@ class User extends General {
             $userId = $user->id;
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
-                $locationId = $user->location_id;
-                $projectId = $user->location->project_id;
-                $prefixName = $user->name;
-                $fileName = HelperClass::convert_vi_to_en($prefixName);
-                $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
-                $fileName = $fileName . "_checkin.png";
-                $userImage->move($destinationPath, $fileName);
-                $historyPG = $this->checkHistoryPG($userId, true);
-                $historyPG->checkin_image = $userId . '/' . $now . '/' . $fileName;
-                $historyPG->save();
+                $locations = UserLocations::where('user_id', $userId)->get();
+                if ($locations) {
+                    foreach ($locations as $location) {
+                        $locationData = Locations::find($location->location_id);
+                        $locationId = $location->location_id;
+                        $projectId = $locationData->project->id;
+                    }                    
+                    $prefixName = $user->name;
+                    $fileName = HelperClass::convert_vi_to_en($prefixName);
+                    $fileName = preg_replace('/\s+/', '_', $fileName);
+                    $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                    $fileName = $fileName . "_checkin.png";
+                    $userImage->move($destinationPath, $fileName);
+                    $historyPG = $this->checkHistoryPG($userId, true);
+                    $historyPG->checkin_image = $projectId . '/' .$locationId.'/'. $now . '/' . $fileName;
+                    $historyPG->save();
+                }
                 return $this->respondWithMessage("Checkin succesfully!");
             } else {
                 return $this->respondWithError('File Is Valid', self::HTTP_BAD_REQUEST);
@@ -342,17 +348,23 @@ class User extends General {
             $userId = $user->id;
             if ($userImage->isValid()) {
                 $now = date('d-m-Y');
-                $locationId = $user->location_id;
-                $projectId = $user->location->project_id;
-                $prefixName = $user->name;
-                $fileName = HelperClass::convert_vi_to_en($prefixName);
-                $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
-                $fileName = $fileName . "_checkout.png";
-                $userImage->move($destinationPath, $fileName);
-                $historyPG = $this->checkHistoryPG($userId, true);
-                $historyPG->checkout_image = $userId . '/' . $now . '/' . $fileName;
-                $historyPG->save();
+                $locations = UserLocations::where('user_id', $userId)->get();
+                if ($locations) {
+                    foreach ($locations as $location) {
+                        $locationData = Locations::find($location->location_id);
+                        $locationId = $location->location_id;
+                        $projectId = $locationData->project->id;
+                    }                    
+                    $prefixName = $user->name;
+                    $fileName = HelperClass::convert_vi_to_en($prefixName);
+                    $fileName = preg_replace('/\s+/', '_', $fileName);
+                    $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                    $fileName = $fileName . "_checkout.png";
+                    $userImage->move($destinationPath, $fileName);
+                    $historyPG = $this->checkHistoryPG($userId, true);
+                    $historyPG->checkout_image = $projectId . '/' .$locationId.'/'. $now . '/' . $fileName;
+                    $historyPG->save();
+                }
                 return $this->respondWithMessage("Checkout succesfully!");
             } else {
                 return $this->respondWithError('File Is Valid', self::HTTP_BAD_REQUEST);
@@ -386,7 +398,7 @@ class User extends General {
                 return 0;
             } else {
                 $historyPgs = HistoryPG::where('user_id', $userId)->whereIn('location_id', $location_ids)
-                                ->whereNull('logout_time')->get();                
+                                ->whereNull('logout_time')->get();
                 foreach ($historyPgs as $historyPg) {
                     $historyPg->logout_time = date('Y-m-d H:i:s');
                     $historyPg->save();
