@@ -6,6 +6,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Middleware\BaseMiddleware;
 use Illuminate\Http\Response;
+use Mtech\Sampling\Models\ConfigApp;
 
 class JwtMiddleware extends BaseMiddleware {
 
@@ -20,6 +21,13 @@ class JwtMiddleware extends BaseMiddleware {
      */
     public function handle($request, \Closure $next)
     {        
+        $now = date('H:i:s');
+        $conigApp = ConfigApp::first();        
+        $timeNotLoginFrom = $conigApp->time_not_login_from;
+        $timeNotLoginTo = $conigApp->time_not_login_to;
+        if($timeNotLoginFrom <= $now && $now <= $timeNotLoginTo){
+            return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 304);
+        }
         if (! $token = $this->auth->setRequest($request)->getToken()) {
             return $this->respondWithError("Account does not exist. Please try again!", Response::HTTP_BAD_REQUEST);
         }

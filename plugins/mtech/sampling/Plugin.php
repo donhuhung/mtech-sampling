@@ -273,6 +273,20 @@ class Plugin extends PluginBase {
             ],
         ];
     }
+    
+        public function registerSettings() {
+        return [
+            'settings' => [
+                'label' => 'Settings Focus Sampling',
+                'description' => 'Settings Focus Sampling',
+                'category' => 'Focus Sampling',
+                'icon' => 'icon-cogs',
+                'class' => 'Mtech\Sampling\Models\Setting',
+                'order' => 500,
+                'permissions' => ['*']
+            ]
+        ];
+    }
 
     public function registerListColumnTypes() {
         return [

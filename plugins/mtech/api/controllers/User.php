@@ -14,6 +14,7 @@ use Mtech\Sampling\Models\HistoryPG;
 use Mtech\Sampling\Models\Locations;
 use Mtech\Sampling\Models\UserLocations;
 use Mtech\API\Classes\HelperClass;
+use Mtech\Sampling\Models\ConfigApp;
 
 /**
  * User Back-end Controller
@@ -53,11 +54,16 @@ class User extends General {
     public function login(Request $request) {
         try {
             $now = date('Y-m-d H:i:s');
+            $timeCurrent = date('H:i:s');
+            $conigApp = ConfigApp::first();
+            $timeNotLoginFrom = $conigApp->time_not_login_from;
+            $timeNotLoginTo = $conigApp->time_not_login_to;
+            if ($timeNotLoginFrom <= $timeCurrent && $timeCurrent <= $timeNotLoginTo) {
+                return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 403);
+            }
             $email = $request->get('email');
             $password = $request->get('password');
             $phone = $request->get('phone');
-            $longitude = $request->get('longitude');
-            $latitude = $request->get('latitude');
             if ($phone) {
                 $credentials = $request->only('phone', 'password');
             } else {
@@ -88,7 +94,7 @@ class User extends General {
                     $user->access_token = $token;
                 }
                 $results['data']['access_token'] = $token;
-                $this->updateHistory($user, true, $latitude, $longitude);
+                $this->updateHistory($user, true);
                 return $this->respondWithSuccess($results, "Login succesful!");
             } else {
                 return $this->respondWithError('Username or password incorrect', self::HTTP_INTERNAL_SERVER_ERROR);
@@ -279,6 +285,20 @@ class User extends General {
      *         required=true,
      *         type="file"
      *   ),
+     *   @SWG\Parameter(
+     *         name="latitude_chekin",
+     *         in="formData",
+     *         description="Latitude Checkin",
+     *         required=true,
+     *         type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *         name="longitude_checkin",
+     *         in="formData",
+     *         description="Longitude Checkin",
+     *         required=true,
+     *         type="string"
+     *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
      * @SWG\Response(response=500, description="Internal server error!"),
      *  security={
@@ -289,6 +309,8 @@ class User extends General {
     public function userCheckin(Request $request) {
         try {
             $userImage = $request->file('user_image');
+            $latitudeChekin = $request->get('latitude_chekin');
+            $longitudeCheckin = $request->get('longitude_checkin');
             $user = JWTAuth::parseToken()->authenticate();
             $userId = $user->id;
             if ($userImage->isValid()) {
@@ -299,7 +321,7 @@ class User extends General {
                         $locationData = Locations::find($location->location_id);
                         $locationId = $location->location_id;
                         $projectId = $locationData->project->id;
-                    }                    
+                    }
                     $prefixName = $user->name;
                     $fileName = HelperClass::convert_vi_to_en($prefixName);
                     $fileName = preg_replace('/\s+/', '_', $fileName);
@@ -307,7 +329,9 @@ class User extends General {
                     $fileName = $fileName . "_checkin.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);
-                    $historyPG->checkin_image = $projectId . '/' .$locationId.'/'. $now . '/' . $fileName;
+                    $historyPG->checkin_image = $projectId . '/' . $locationId . '/' . $now . '/' . $fileName;
+                    $historyPG->latitude_chekin = $latitudeChekin;
+                    $historyPG->longitude_checkin = $longitudeCheckin;
                     $historyPG->save();
                 }
                 return $this->respondWithMessage("Checkin succesfully!");
@@ -334,6 +358,20 @@ class User extends General {
      *         required=true,
      *         type="file"
      *   ),
+     *   @SWG\Parameter(
+     *         name="latitude_checkout",
+     *         in="formData",
+     *         description="Latitude Checkout",
+     *         required=true,
+     *         type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *         name="longitude_checkout",
+     *         in="formData",
+     *         description="Longitude Checkout",
+     *         required=true,
+     *         type="string"
+     *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
      * @SWG\Response(response=500, description="Internal server error!"),
      *  security={
@@ -344,6 +382,8 @@ class User extends General {
     public function userCheckout(Request $request) {
         try {
             $userImage = $request->file('user_image');
+            $latitudeCheckout = $request->get('latitude_checkout');
+            $longitudeCheckout = $request->get('longitude_checkout');
             $user = JWTAuth::parseToken()->authenticate();
             $userId = $user->id;
             if ($userImage->isValid()) {
@@ -354,7 +394,7 @@ class User extends General {
                         $locationData = Locations::find($location->location_id);
                         $locationId = $location->location_id;
                         $projectId = $locationData->project->id;
-                    }                    
+                    }
                     $prefixName = $user->name;
                     $fileName = HelperClass::convert_vi_to_en($prefixName);
                     $fileName = preg_replace('/\s+/', '_', $fileName);
@@ -362,7 +402,9 @@ class User extends General {
                     $fileName = $fileName . "_checkout.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);
-                    $historyPG->checkout_image = $projectId . '/' .$locationId.'/'. $now . '/' . $fileName;
+                    $historyPG->checkout_image = $projectId . '/' . $locationId . '/' . $now . '/' . $fileName;
+                    $historyPG->latitude_checkout = $latitudeCheckout;
+                    $historyPG->longitude_checkout = $longitudeCheckout;
                     $historyPG->save();
                 }
                 return $this->respondWithMessage("Checkout succesfully!");
@@ -374,7 +416,7 @@ class User extends General {
         }
     }
 
-    protected function updateHistory($user, $is_login, $latitude = null, $longitude = null) {
+    protected function updateHistory($user, $is_login) {
         $userId = $user->id;
         $checkHistory = $this->checkHistoryPG($userId, $is_login);
         if (!$checkHistory) {
@@ -389,8 +431,6 @@ class User extends General {
                     $data[] = [
                         'user_id' => $userId,
                         'location_id' => $location_id,
-                        'longitude' => $longitude,
-                        'latitude' => $latitude,
                         'login_time' => date('Y-m-d H:i:s')
                     ];
                 }

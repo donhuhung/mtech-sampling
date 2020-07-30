@@ -34,6 +34,7 @@ Route::group([
         Route::post('/check-phone', 'Mtech\Api\Controllers\Customer@checkPhone');
         Route::post('/update-bill', 'Mtech\Api\Controllers\Customer@updateBill');
         Route::post('/update-avatar', 'Mtech\Api\Controllers\Customer@updateAvatar');
+        Route::post('/get-otp', 'Mtech\Api\Controllers\Customer@getOTP');
     });
     
     Route::middleware('Mtech\API\Middleware\JwtMiddleware')->prefix('gift')->group(function () {

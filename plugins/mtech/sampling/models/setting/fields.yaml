@@ -1,0 +1,48 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+tabs:
+    fields:        
+        brand_name:
+            label: Brand Name
+            type: text
+            span: auto
+            tab: Config Telco
+            required: true        
+        account_name:
+            label: Account Name
+            type: text
+            span: auto
+            tab: Config Telco
+            required: true
+        account_password:
+            label: Account Password
+            type: password
+            span: auto
+            tab: Config Telco
+            required: true
+        url_telco:
+            label: URL Telco
+            type: text
+            span: auto
+            tab: Config Telco
+            required: true
+        text_sms:
+            label: Text SMS
+            type: text
+            span: auto
+            tab: Config Telco
+            required: true
+        length_otp:
+            label: Length OTP
+            type: text
+            span: auto
+            tab: Config OTP
+            required: true
+        time_expire_otp:
+            label: Time Expire OTP(Minutes)
+            type: text
+            span: auto
+            tab: Config OTP
+            required: true
+            
