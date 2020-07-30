@@ -211,6 +211,13 @@ class Plugin extends PluginBase {
                         'permissions' => ['mtech.sampling.configapp'],
                         'counterLabel' => 'Setting',
                     ],
+                    'settingotp' => [
+                        'label' => 'Config OTP',
+                        'icon' => 'icon-cog',
+                        'url' => Backend::url('mtech/sampling/settingotp'),
+                        'permissions' => ['mtech.sampling.settingotp'],
+                        'counterLabel' => 'Setting',
+                    ],
                 // 'customergift' => [
                 //     'label' => 'Customer Gifts',
                 //     'icon' => 'icon-history',

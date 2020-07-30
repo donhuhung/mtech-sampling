@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Setting O T P
+
+# Model Form Field configuration
+form: $/mtech/sampling/models/settingotp/fields.yaml
+
+# Model Class name
+modelClass: Mtech\Sampling\Models\SettingOTP
+
+# Default redirect location
+defaultRedirect: mtech/sampling/settingotp
+
+# Create page
+create:
+    title: Create Setting O T P
+    redirect: mtech/sampling/settingotp/update/:id
+    redirectClose: mtech/sampling/settingotp
+
+# Update page
+update:
+    title: Edit Setting O T P
+    redirect: mtech/sampling/settingotp
+    redirectClose: mtech/sampling/settingotp
+
+# Preview page
+preview:
+    title: Preview Setting O T P

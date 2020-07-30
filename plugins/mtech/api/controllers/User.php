@@ -59,7 +59,7 @@ class User extends General {
             $timeNotLoginFrom = $conigApp->time_not_login_from;
             $timeNotLoginTo = $conigApp->time_not_login_to;
             if ($timeNotLoginFrom <= $timeCurrent && $timeCurrent <= $timeNotLoginTo) {
-                return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 403);
+                return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 405);
             }
             $email = $request->get('email');
             $password = $request->get('password');

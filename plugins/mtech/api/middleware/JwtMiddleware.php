@@ -26,7 +26,7 @@ class JwtMiddleware extends BaseMiddleware {
         $timeNotLoginFrom = $conigApp->time_not_login_from;
         $timeNotLoginTo = $conigApp->time_not_login_to;
         if($timeNotLoginFrom <= $now && $now <= $timeNotLoginTo){
-            return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 304);
+            return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 405);
         }
         if (! $token = $this->auth->setRequest($request)->getToken()) {
             return $this->respondWithError("Account does not exist. Please try again!", Response::HTTP_BAD_REQUEST);

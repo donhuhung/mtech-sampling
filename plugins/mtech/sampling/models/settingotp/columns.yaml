@@ -1,0 +1,37 @@
+columns:
+    project_id:
+        label: project
+        type: number
+        searchable: true
+        select: project_name
+        relation: project
+    brand_name:
+        label: 'brand name'
+        type: text
+        searchable: true
+    account_name:
+        label: 'account name'
+        type: text
+        searchable: true
+    account_password:
+        label: 'account password'
+        type: text
+        searchable: true
+    url_telco:
+        label: 'url telco'
+        type: text
+        searchable: true
+    text_sms:
+        label: 'text sms'
+        type: text
+        searchable: true
+    length_otp:
+        label: 'length otp'
+        type: number
+        searchable: true
+    time_expired_otp:
+        label: 'time expired otp'
+        type: number
+    created_at:
+        label: created_at
+        type: date
