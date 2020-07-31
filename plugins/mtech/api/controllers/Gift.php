@@ -51,7 +51,7 @@ class Gift extends General {
     public function getListGift(Request $request) {
         try {
             $locationId = $request->get('location_id');
-            $gifts = $this->giftRepository->where('location_id',$locationId)->where('total_gift','>',0)->get();
+            $gifts = $this->giftRepository->where('location_id',$locationId)->where('total_gift','>',0)->get();            
             $results = fractal($gifts, new GiftTransformer())->toArray();
             return $this->respondWithSuccess($results, ('Get List Gift successful!'));            
         } catch (\Exception $ex) {
@@ -91,7 +91,7 @@ class Gift extends General {
             $customner = $this->customerRepository->find($customnerID);
             $projectID = $customner->location->project_id;
             $project = $this->projectRepository->find($projectID);
-            $locationId = $customner->location_id;
+            $locationId = $customner->location_id;            
             $chooseGift = $project->allow_choose_gift;
             $numberReceiveGift = $project->number_receive_gift;
             if ($chooseGift) {
@@ -105,12 +105,12 @@ class Gift extends General {
                 }
             } else {
                 //Random Gift On Server
-                $gift = $this->giftRepository->randomGift($customnerID, $locationId, $numberReceiveGift);
-                if (!$gift) {
+                $gift = $this->giftRepository->randomGift($customnerID, $locationId, $numberReceiveGift);                                                
+                if (count($gift['gift']) == 0) {
                     return $this->respondWithError('Hết quà', self::HTTP_BAD_REQUEST);
                 } 
-                $arrGiftId = $gift;
-            }
+                $arrGiftId = $gift['gift'];
+            }            
             $giftData = $this->giftRepository->whereIn('id', $arrGiftId)->get();
             $results = fractal($giftData, new GiftTransformer())->toArray();
             return $this->respondWithSuccess($results, ('Catch Gift successful!'));           

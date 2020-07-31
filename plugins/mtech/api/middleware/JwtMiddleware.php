@@ -49,8 +49,8 @@ class JwtMiddleware extends BaseMiddleware {
     protected function respondWithError($message = null, $statusCode = null) {
         $this->statusCode = $statusCode;
         $response = [
-            'error' => true,
-            'error_code' => $this->statusCode,
+            'status' => true,
+            'status_code' => $this->statusCode,
             'message' => $message,
         ];
 
