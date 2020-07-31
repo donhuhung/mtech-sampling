@@ -109,11 +109,17 @@ class Gift extends General {
                 if (count($gift['gift']) == 0) {
                     return $this->respondWithError('Hết quà', self::HTTP_BAD_REQUEST);
                 } 
-                $arrGiftId = $gift['gift'];
-            }            
+                $arrGiftId = $gift['gift'];                
+            }       
+            $totalGift = count($arrGiftId);
             $giftData = $this->giftRepository->whereIn('id', $arrGiftId)->get();
-            $results = fractal($giftData, new GiftTransformer())->toArray();
-            return $this->respondWithSuccess($results, ('Catch Gift successful!'));           
+            $counts = array_count_values($arrGiftId);
+            foreach($giftData as $item){
+                $totalGiftReceive = $counts[$item->id];
+                $item->totalGiftRecive = $totalGiftReceive;
+            }            
+            $results = fractal($giftData, new GiftTransformer($totalGiftReceive))->toArray();
+            return $this->respondWithGiftSuccess($results, $totalGift,('Catch Gift successful!'));           
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
         }

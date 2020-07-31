@@ -3,6 +3,7 @@
 namespace Mtech\Sampling\Models;
 
 use Model;
+use Mtech\Sampling\Models\Locations;
 
 /**
  * Model
@@ -33,7 +34,7 @@ class HistoryPG extends Model {
     public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
-    public $morphMany = [];
+    public $morphMany = [];        
 
     public function scopeFilterByUser($query, $filter) {
         return $query->whereHas('user', function($user) use ($filter) {

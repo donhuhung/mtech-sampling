@@ -2,6 +2,7 @@
 
 use Model;
 use Mtech\Sampling\Models\Gifts;
+use Mtech\Sampling\Models\Projects;
 use RainLab\User\Models\User As UserModel;
 
 /**
@@ -48,6 +49,17 @@ class Locations extends Model
      /**
      * @return mixed
      */
+    
+    public function getLocationOptions(){
+        $arrayLocations = [];
+        $locations = self::get();
+        foreach($locations as $location){            
+           $arrayLocations[$location->id] = $location->location_name.' - '.$location->project->project_name;
+        }
+        return $arrayLocations;
+    }
+    
+    
     public function getGiftInfoAttribute()
     {
         $gifts = Gifts::where('location_id', $this->id)->get();

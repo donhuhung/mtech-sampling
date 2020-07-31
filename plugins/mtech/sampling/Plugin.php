@@ -194,7 +194,7 @@ class Plugin extends PluginBase {
                         'label' => 'Customer Info',
                         'icon' => 'icon-address-card-o',
                         'url' => Backend::url('mtech/sampling/customergift'),
-                        'permissions' => ['mtech.sampling.customer'],
+                        'permissions' => ['mtech.sampling.customergift'],
                         'counterLabel' => 'Report Detail',
                     ],
                     'historypg' => [
@@ -278,10 +278,18 @@ class Plugin extends PluginBase {
                 'tab' => 'Focus Sampling',
                 'label' => 'Customer'
             ],
+            'mtech.sampling.customergift' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Customer Gift'
+            ],
+            'mtech.sampling.historypg' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'PG Info'
+            ],
         ];
     }
-    
-        public function registerSettings() {
+
+    public function registerSettings() {
         return [
             'settings' => [
                 'label' => 'Settings Focus Sampling',
@@ -314,7 +322,11 @@ class Plugin extends PluginBase {
 
     public function productSampling($value, $column, $record) {
         $customerGift = CustomerGifts::find($record->id);
-        return $customerGift->customer->productSampling->name;
+        if (isset($customerGift->customer->productSampling->name)) {
+            return $customerGift->customer->productSampling->name;
+        } else {
+            return;
+        }
     }
 
     public function calculateDateProject($value, $column, $record) {

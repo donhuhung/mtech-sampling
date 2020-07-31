@@ -1,9 +1,10 @@
 scopes:
   location:
       label: Location
+      type: group
+      conditions: location_id in (:filtered)
       modelClass: Mtech\Sampling\Models\Locations
-      nameFrom: location_name
-      scope: filterByLocation
+      options: getLocationOptions
   created_at:
         label: Date
         type: daterange

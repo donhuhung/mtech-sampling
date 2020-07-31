@@ -7,6 +7,11 @@ use Mtech\Sampling\Models\Gifts;
 
 class GiftTransformer extends Fractal\TransformerAbstract
 {
+    protected $totalGiftReceive;
+    public function __construct($totalGiftReceive) {
+         $this->totalGiftReceive = $totalGiftReceive;
+     }
+
 
     public function transform(Gifts $gift)
     {        
@@ -16,6 +21,7 @@ class GiftTransformer extends Fractal\TransformerAbstract
             'image'         => (string) $gift->gift_image,         
             'number_gift' => (int)$gift->gift_inventory,
             'total_gift' => (int)$gift->total_gift,
+            'totalGiftReceive' => $this->totalGiftReceive,
             'path' => '/storage/app/media',
             'createdAt' => Carbon::parse($gift->created_at)->format('Y-m-d'),
         ];

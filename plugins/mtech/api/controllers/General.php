@@ -83,6 +83,21 @@ class General extends Controller {
 
         return $this->respondWithArray($response);
     }
+    
+    protected function respondWithGiftSuccess($data = [],$totalGift,$message = 'Action Successfully') {
+        if(isset($data['data'])){
+            $data = $data['data'];
+        }
+        $response = [
+            'status' => false,
+            'status_code' => $this->getStatusCode(),
+            'message' => $message,
+            'totalGift' => $totalGift,
+            'data' => $data,
+        ];
+
+        return $this->respondWithArray($response);
+    }
 
     protected function respondWithData($data = [], array $headers = []) {
         $array = array_merge([

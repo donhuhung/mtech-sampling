@@ -11,8 +11,6 @@ modelClass: Mtech\Sampling\Models\CustomerGifts
 # List Title
 title: Manage Customer Gifts
 
-# Link URL for each record
-recordUrl: mtech/sampling/customergift/update/:id
 
 # Message to display if the list is empty
 noRecordsMessage: backend::lang.list.no_records

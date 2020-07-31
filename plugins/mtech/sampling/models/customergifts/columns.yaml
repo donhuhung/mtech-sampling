@@ -52,5 +52,4 @@ columns:
         searchable: true
     customer:
         label: Product Sampling
-        type: product_sampling        
-        searchable: true
+        type: product_sampling                
