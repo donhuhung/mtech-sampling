@@ -174,11 +174,13 @@ class Customer extends General {
                 $phone = $customer->phone;
                 $name = $customer->name;
                 $locationId = $customer->location_id;
+                $locationName = HelperClass::getAlias($customer->location->location_name);
                 $projectId = $customer->location->project_id;
+                $projectName = HelperClass::getAlias($customer->location->project->project_name);
                 $prefixName = $phone . "_" . $name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                $destinationPath = storage_path('app/media/' . $projectName.'_'.$projectId . '/' . $locationName.'_'.$locationId . '/' . $now . '/');
                 $fileNameAvatar = $fileName . "_avatar.png";
                 $fileNameBill = $fileName . "_bill.png";
                 $billImage->move($destinationPath, $fileNameBill);
@@ -233,11 +235,13 @@ class Customer extends General {
                 $phone = $customer->phone;
                 $name = $customer->name;
                 $locationId = $customer->location_id;
+                $locationName = HelperClass::getAlias($customer->location->location_name);
                 $projectId = $customer->location->project_id;
+                $projectName = HelperClass::getAlias($customer->location->project->project_name);
                 $prefixName = $phone . "_" . $name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                $destinationPath = storage_path('app/media/' . $projectName.'_'.$projectId . '/' . $locationName.'_'.$locationId . '/' . $now . '/');
                 $fileNameAvatar = $fileName . "_avatar.png";
                 $customerAvatar->move($destinationPath, $fileNameAvatar);
             }

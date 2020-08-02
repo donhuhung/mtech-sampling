@@ -5,6 +5,7 @@ namespace Mtech\Sampling\Controllers;
 use BackendMenu;
 use Backend\Classes\Controller;
 use BackendAuth;
+use Event;
 
 /**
  * Project Back-end Controller
@@ -34,6 +35,10 @@ class Project extends Controller {
     public function __construct() {
         parent::__construct();
 
+         Event::listen('backend.list.injectRowClass', function ($lists, $record) {
+            return $this->listInjectRowClass($record);
+        });
+        $this->addCss('/plugins/mtech/sampling/assets/css/projects.css');
         BackendMenu::setContext('Mtech.Sampling', 'sampling', 'project');
     }
 
@@ -49,6 +54,16 @@ class Project extends Controller {
                     });
                 }
             }
+        }
+    }
+    
+     public function listInjectRowClass($record, $definition = null)
+    {         
+        if (!$record->status) {
+            return 'text-danger';
+        }
+        else{
+            return 'text-success';
         }
     }
 

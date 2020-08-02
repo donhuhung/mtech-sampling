@@ -313,6 +313,16 @@ class Plugin extends PluginBase {
             'total_gift_inventory_project' => [$this, 'totalGiftInventoryProject'],
         ];
     }
+    
+    public function registerReportWidgets()
+    {
+        return [
+            'Mtech\Sampling\ReportWidgets\CampaignGift'=>[
+                'label'   => 'Campagin Gift',
+                'context' => 'dashboard'
+            ],
+        ];
+    }
 
     public function locationProject($value, $column, $record) {
         if ($record->location) {

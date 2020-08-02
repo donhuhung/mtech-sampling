@@ -1,0 +1,21 @@
+.text-success{
+    background-color: green !important;    
+}
+table.table.data .text-success td, table.table.data .text-success th{
+    color:#fff;
+}
+table.table.data .text-danger td, table.table.data .text-danger th{
+    color:#fff;
+}
+.text-danger{
+    background-color: red;
+}
+table.table.data tbody tr:nth-child(even) td, table.table.data tbody tr:nth-child(even) th{
+    background-color: transparent;    
+}
+.text-success:hover{
+    background-color: green !important;    
+}
+.text-danger:hover{
+    background-color: red;
+}

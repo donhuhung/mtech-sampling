@@ -52,7 +52,7 @@ class Gift extends General {
         try {
             $locationId = $request->get('location_id');
             $gifts = $this->giftRepository->where('location_id',$locationId)->where('total_gift','>',0)->get();            
-            $results = fractal($gifts, new GiftTransformer())->toArray();
+            $results = fractal($gifts, new GiftTransformer(0))->toArray();
             return $this->respondWithSuccess($results, ('Get List Gift successful!'));            
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);

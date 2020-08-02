@@ -54,13 +54,7 @@ class User extends General {
     public function login(Request $request) {
         try {
             $now = date('Y-m-d H:i:s');
-            $timeCurrent = date('H:i:s');
-            $conigApp = ConfigApp::first();
-            $timeNotLoginFrom = $conigApp->time_not_login_from;
-            $timeNotLoginTo = $conigApp->time_not_login_to;
-            if ($timeNotLoginFrom <= $timeCurrent && $timeCurrent <= $timeNotLoginTo) {
-                return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 405);
-            }
+            $timeCurrent = date('H:i:s');            
             $email = $request->get('email');
             $password = $request->get('password');
             $phone = $request->get('phone');
@@ -77,6 +71,20 @@ class User extends General {
                 $user = $this->userRepository->where('phone', $phone)->first();
                 if (!$user)
                     return $this->respondWithError('Email/Phone or password incorrect', self::HTTP_BAD_REQUEST);
+            }
+            $userId = $user->id;
+            $locations = UserLocations::where('user_id', $userId)->get();
+            if ($locations) {
+                foreach ($locations as $location) {
+                    $locationData = Locations::find($location->location_id);
+                    $projectId = $locationData->project->id;
+                }
+            }
+            $conigApp = ConfigApp::where('project_id', $projectId)->first();
+            $timeNotLoginFrom = $conigApp->time_not_login_from;            
+            $timeNotLoginTo = $conigApp->time_not_login_to;
+            if ($timeNotLoginFrom <= $timeCurrent && $timeCurrent <= $timeNotLoginTo) {
+                return $this->respondWithError("Đã hết giờ làm việc. Vui lòng quay lại sau.", 405);
             }
             if ($user->is_activated == 0) {
                 return $this->respondWithError('The account has not been activated. Please contact the admin', self::HTTP_INTERNAL_SERVER_ERROR);
