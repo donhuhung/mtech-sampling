@@ -1,6 +1,7 @@
 scopes:
   project:
       label: Project/Campaign
+      type: group
+      conditions: project_id = (:filtered)
       modelClass: Mtech\Sampling\Models\Projects
-      nameFrom: project_name
-      scope: filterByProject
+      options: matchingProjects

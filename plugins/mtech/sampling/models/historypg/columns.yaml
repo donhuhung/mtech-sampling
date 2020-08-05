@@ -12,23 +12,33 @@ columns:
         searchable: true
         sortable: true
     checkin_image:
-        label: Checkin Image
+        label: 'Checkin Image'
         type: partial
-        path: ~/plugins/mtech/sampling/models/historypg/_checkin_image.htm        
+        path: ~/plugins/mtech/sampling/models/historypg/_checkin_image.htm
     logout_time:
         label: Logout
         type: text
         sortable: true
     checkout_image:
-        label: Checkout Image
+        label: 'Checkout Image'
         type: partial
         path: ~/plugins/mtech/sampling/models/historypg/_checkout_image.htm
     location_id:
         label: Location
-        type: location-project  
-    longitude:
-        label: Longitude
+        type: location-project
+    longitude_checkin:
+        label: 'Longitude Checkin'
         type: text
-    latitude:
-        label: Latitude
+    latitude_chekin:
+        label: 'Latitude Checkin'
         type: text
+    longitude_checkout:
+        label: 'Longtitue Checkout'
+        type: text
+        searchable: true
+        sortable: true
+    latitude_checkout:
+        label: 'Latitude Checkout'
+        type: text
+        searchable: true
+        sortable: true

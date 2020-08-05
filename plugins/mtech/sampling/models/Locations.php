@@ -4,6 +4,8 @@ use Model;
 use Mtech\Sampling\Models\Gifts;
 use Mtech\Sampling\Models\Projects;
 use RainLab\User\Models\User As UserModel;
+use BackendAuth;
+use DB;
 
 /**
  * Model
@@ -71,4 +73,5 @@ class Locations extends Model
                     $project->whereIn('id', $filter);
                 });
     }   
+        
 }

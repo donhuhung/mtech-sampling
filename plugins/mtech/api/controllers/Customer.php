@@ -93,24 +93,23 @@ class Customer extends General {
             $user = JWTAuth::parseToken()->authenticate();
             $userId = $user->id;
             $timeExpiredOTP = Setting::get('time_expire_otp');
-            /* $checkValidOTP = $this->otpRepository
-              ->where('phone', $phone)
-              ->where('otp', $otp)
-              ->where('user_id', $userId)->first(); */
+            $checkValidOTP = $this->otpRepository
+                            ->where('phone', $phone)
+                            ->where('otp', $otp)
+                            ->where('user_id', $userId)->first();
             $customer = "";
 
-            /* if (!$checkValidOTP) {
-              return $this->respondWithError('Mã OTP không hợp lệ!', self::HTTP_BAD_REQUEST);
-              }
-              if ($checkValidOTP) {
-              $createdDate = $checkValidOTP->created_at;
-              $resultDate = date_diff(date_create($now), date_create($createdDate));
-              $resultDate = $resultDate->format("%s");
-              if($resultDate > $timeExpiredOTP)
-              {
-              return $this->respondWithError('Mã OTP đã hết hạn, Vui lòng đăng ký lại dịch vụ!', self::HTTP_BAD_REQUEST);
-              }
-              } */
+            if (!$checkValidOTP) {
+                return $this->respondWithError('Mã OTP không hợp lệ!', self::HTTP_BAD_REQUEST);
+            }
+            if ($checkValidOTP) {
+                $createdDate = $checkValidOTP->created_at;
+                $resultDate = date_diff(date_create($now), date_create($createdDate));
+                $resultDate = $resultDate->format("%s");
+                if ($resultDate > $timeExpiredOTP) {
+                    return $this->respondWithError('Mã OTP đã hết hạn, Vui lòng đăng ký lại dịch vụ!', self::HTTP_BAD_REQUEST);
+                }
+            }
             if ($phone) {
                 $customer = $this->customerRepository->where('phone', $phone)->where('otp', $otp)->first();
             }
@@ -126,7 +125,7 @@ class Customer extends General {
             $customerInfo = $this->customerRepository->create($arrCustomer);
 
             //Delete OTP
-            //Db::table('mtech_sampling_otp')->where('id', $checkValidOTP->id)->delete();
+            Db::table('mtech_sampling_otp')->where('id', $checkValidOTP->id)->delete();
             $results = fractal($customerInfo, new CustomerTransformer())->toArray();
             return $this->respondWithSuccess($results, ('Store Customer successful!'));
         } catch (\Exception $ex) {
@@ -180,7 +179,7 @@ class Customer extends General {
                 $prefixName = $phone . "_" . $name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectName.'_'.$projectId . '/' . $locationName.'_'.$locationId . '/' . $now . '/');
+                $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                 $fileNameAvatar = $fileName . "_avatar.png";
                 $fileNameBill = $fileName . "_bill.png";
                 $billImage->move($destinationPath, $fileNameBill);
@@ -241,7 +240,7 @@ class Customer extends General {
                 $prefixName = $phone . "_" . $name;
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
-                $destinationPath = storage_path('app/media/' . $projectName.'_'.$projectId . '/' . $locationName.'_'.$locationId . '/' . $now . '/');
+                $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                 $fileNameAvatar = $fileName . "_avatar.png";
                 $customerAvatar->move($destinationPath, $fileNameAvatar);
             }
@@ -341,22 +340,13 @@ class Customer extends General {
                 $locationData = Locations::find($location->location_id);
                 $projectId = $locationData->project->id;
             }
-            $result = $this->callSMSTelco($projectId, $otpCustomer->id, $phone, $otpString);
-            $result = json_decode($result);
-            if ($result) {
-                $objResponse = $result->response->submission->sms;
-                foreach ($objResponse as $obj) {
-                    $otpId = $obj->id;
-                    $status = $obj->status;
-                    $setting = SettingOTP::where('project_id', $projectId)->first();                    
-                    if ($status == 0) {
-                        $results = fractal($setting, new SettingOTPTransformer())->toArray();
-                        return $this->respondWithSuccess($results, ('OTP has been send successfully!'));
-                    } else {
-                        $results = fractal($setting, new SettingOTPTransformer())->toArray();
-                        return $this->respondWithSuccess($results, ('OTP has been send successfully!'));
-                    }
-                }
+            $result = $this->callSMSFibo($projectId, $otpCustomer->id, $phone, $otpString);
+            $xml = simplexml_load_string($result);
+            $data = json_decode(json_encode($xml), 1);
+            if ($data) {
+                $setting = SettingOTP::where('project_id', $projectId)->first();
+                $results = fractal($setting, new SettingOTPTransformer())->toArray();
+                return $this->respondWithSuccess($results, ('OTP has been send successfully!'));
             }
             return $this->respondWithMessage("OTP is valid!");
         } catch (\Exception $ex) {
@@ -364,40 +354,41 @@ class Customer extends General {
         }
     }
 
-    private function callSMSTelco($projectId, $otpID, $phone, $otpString) {
+    private function callSMSFibo($projectId, $otpID, $phone, $otpString) {
         $setting = SettingOTP::where('project_id', $projectId)->first();
         $brandName = $setting->brand_name;
         $accountName = $setting->account_name;
         $accountPassword = $setting->account_password;
-        $url = $setting->url_telco;
         $textSMS = $setting->text_sms;
-        $curl = curl_init();
-        $data = '{
-            "submission":
-            {
-                "api_key":"' . $accountName . '",
-                "api_secret":"' . $accountPassword . '", 
-                "sms": [
-                    {
-                        "id":"' . $otpID . '",
-                        "brandname":"' . $brandName . '",
-                        "text":"' . $textSMS . ':' . $otpString . '",
-                        "to":"' . $phone . '"
-                    }
-                ]
-            }
-        }';
-        // OPTIONS:
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json')
-        );
+        /* $data = '{
+          "submission":
+          {
+          "api_key":"' . $accountName . '",
+          "api_secret":"' . $accountPassword . '",
+          "sms": [
+          {
+          "id":"' . $otpID . '",
+          "brandname":"' . $brandName . '",
+          "text":"' . $textSMS . ':' . $otpString . '",
+          "to":"' . $phone . '"
+          }
+          ]
+          }
+          }'; */
+        $message = $otpString . " " . $textSMS;
+        $url = $setting->url_telco;
+        $url .= "?clientNo=" . $accountName . "&clientPass=" . $accountPassword . "&senderName=" . $brandName;
+        $url .= "&phoneNumber=" . $phone;
+        $url .= "&smsMessage=" . urlencode($message);
+        $url .= "&smsGUID=0";
+        $url .= "&serviceType=0";
+        // Khởi tạo CURL
+        $curl = curl_init($url);
+
+        // Thiết lập có return
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        // EXECUTE:
+        curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         $result = curl_exec($curl);
         if (!$result) {
             die("Connection Failure");

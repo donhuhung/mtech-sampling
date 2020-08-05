@@ -286,6 +286,14 @@ class Plugin extends PluginBase {
                 'tab' => 'Focus Sampling',
                 'label' => 'PG Info'
             ],
+            'mtech.sampling.configapp' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Config App'
+            ],
+            'mtech.sampling.settingotp' => [
+                'tab' => 'Focus Sampling',
+                'label' => 'Config OTP'
+            ],
         ];
     }
 

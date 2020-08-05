@@ -7,7 +7,6 @@ use Event;
 use October\Rain\Auth\Models\User as UserBase;
 use RainLab\User\Models\Settings as UserSettings;
 use October\Rain\Auth\AuthException;
-use Zilliqa\Backend\Models\Country;
 
 class User extends UserBase
 {

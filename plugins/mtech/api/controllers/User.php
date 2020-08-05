@@ -42,9 +42,7 @@ class User extends General {
      *     required=true,
      *    @SWG\Schema(example={
      *         "email": "test@gmail.com",
-     *         "password": "123456789",
-     *         "longitude": "132121",
-     *         "latitude": "4343434",
+     *         "password": "123456789"
      *      })
      *   ),
      * @SWG\Response(response=200, description="Server is OK!"),
