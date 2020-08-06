@@ -174,3 +174,9 @@
 1.0.59:
     - 'Created table mtech_sampling_setting_otp_project'
     - builder_table_create_mtech_sampling_setting_otp_project.php
+1.0.60:
+    - 'Updated table mtech_sampling_product'
+    - builder_table_update_mtech_sampling_product_3.php
+1.0.61:
+    - 'Updated table mtech_sampling_product'
+    - builder_table_update_mtech_sampling_product_4.php

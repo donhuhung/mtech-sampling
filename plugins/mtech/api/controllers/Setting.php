@@ -86,7 +86,15 @@ class Setting extends General {
      */
     public function getProductSampling(Request $request) {
         try {
-            $products = $this->productSamplingRepository->get();
+            $arrProject = [];
+            $projects = Projects::where('status',1)->get();
+            if(!$projects){
+                return $this->respondWithMessage('Data not found!');
+            }
+            foreach($projects as $project){
+                array_push($arrProject, $project->id);
+            }
+            $products = $this->productSamplingRepository->where('status',1)->whereIn('id',$arrProject)->get();
             if (!$products) {
                 return $this->respondWithMessage('Data not found!');
             }

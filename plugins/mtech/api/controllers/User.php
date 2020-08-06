@@ -15,6 +15,7 @@ use Mtech\Sampling\Models\Locations;
 use Mtech\Sampling\Models\UserLocations;
 use Mtech\API\Classes\HelperClass;
 use Mtech\Sampling\Models\ConfigApp;
+use Mtech\Sampling\Models\Projects;
 
 /**
  * User Back-end Controller
@@ -76,8 +77,12 @@ class User extends General {
                 foreach ($locations as $location) {
                     $locationData = Locations::find($location->location_id);
                     $projectId = $locationData->project->id;
+                    $projectStatus = $locationData->project->status;
                 }
-            }
+            }    
+            if(!$projectStatus){
+                return $this->respondWithError('Hiện tại campaign này không còn chạy. Vui lòng quay lại sau!', self::HTTP_INTERNAL_SERVER_ERROR);
+            }            
             $conigApp = ConfigApp::where('project_id', $projectId)->first();
             $timeNotLoginFrom = $conigApp->time_not_login_from;            
             $timeNotLoginTo = $conigApp->time_not_login_to;
@@ -292,7 +297,7 @@ class User extends General {
      *         type="file"
      *   ),
      *   @SWG\Parameter(
-     *         name="latitude_chekin",
+     *         name="latitude_checkin",
      *         in="formData",
      *         description="Latitude Checkin",
      *         required=true,
@@ -315,7 +320,7 @@ class User extends General {
     public function userCheckin(Request $request) {
         try {
             $userImage = $request->file('user_image');
-            $latitudeChekin = $request->get('latitude_chekin');
+            $latitudeChekin = $request->get('latitude_checkin');
             $longitudeCheckin = $request->get('longitude_checkin');
             $user = JWTAuth::parseToken()->authenticate();
             $userId = $user->id;
@@ -326,12 +331,14 @@ class User extends General {
                     foreach ($locations as $location) {
                         $locationData = Locations::find($location->location_id);
                         $locationId = $location->location_id;
+                        $locationName = HelperClass::getAlias($locationData->location_name);
                         $projectId = $locationData->project->id;
+                        $projectName = HelperClass::getAlias($locationData->project->project_name);
                     }
                     $prefixName = $user->name;
                     $fileName = HelperClass::convert_vi_to_en($prefixName);
                     $fileName = preg_replace('/\s+/', '_', $fileName);
-                    $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                    $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                     $fileName = $fileName . "_checkin.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);
@@ -399,12 +406,14 @@ class User extends General {
                     foreach ($locations as $location) {
                         $locationData = Locations::find($location->location_id);
                         $locationId = $location->location_id;
+                        $locationName = HelperClass::getAlias($locationData->location_name);
                         $projectId = $locationData->project->id;
+                        $projectName = HelperClass::getAlias($locationData->project->project_name);
                     }
                     $prefixName = $user->name;
                     $fileName = HelperClass::convert_vi_to_en($prefixName);
                     $fileName = preg_replace('/\s+/', '_', $fileName);
-                    $destinationPath = storage_path('app/media/' . $projectId . '/' . $locationId . '/' . $now . '/');
+                    $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                     $fileName = $fileName . "_checkout.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);

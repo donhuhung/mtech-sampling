@@ -325,6 +325,10 @@ class Customer extends General {
             $userId = $user->id;
             $lengthOTP = Setting::get('length_otp');
             $otpString = HelperClass::generateOTP($lengthOTP);
+            $customer = $this->customerRepository->where('phone', $phone)->where('otp', $otpString)->first();
+            if ($customer) {
+                return $this->respondWithError('Số điện thoại này đã nhận quà từ chương trình', self::HTTP_BAD_REQUEST);
+            }
 
             //Store Customer OTP
             $arrCustomerOTP = ['otp' => $otpString, 'user_id' => $userId, 'phone' => $phone, 'created_at' => $now];

@@ -18,6 +18,18 @@ class ProductSampling extends Model
     /**
      * @var array Validation rules
      */
-    public $rules = [
+    public $rules = [];
+    
+    /**
+     * @var array Relations
+     */
+    public $hasOne = [];
+    public $hasMany = [];
+    public $belongsTo = [
+        'project' => ['Mtech\Sampling\Models\Projects','key' => 'project_id']        
     ];
+    public $belongsToMany = [];
+    public $morphTo = [];
+    public $morphOne = [];
+    public $morphMany = [];
 }

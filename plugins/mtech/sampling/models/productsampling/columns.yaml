@@ -5,6 +5,11 @@ columns:
     name:
         label: name
         type: text
+    project_id:
+        label: Project
+        relation: project
+        select: project_name
+        searchable: true
     status:
         label: Status
         type: switch

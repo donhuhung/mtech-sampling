@@ -3,6 +3,12 @@ fields:
         label: Name
         span: auto
         type: text
+    project:
+        label: Project
+        nameFrom: project_name
+        descriptionFrom: description
+        span: auto
+        type: relation
     status:
         label: Status
         span: auto

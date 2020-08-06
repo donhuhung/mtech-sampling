@@ -54,7 +54,29 @@ class Locations extends Model
     
     public function getLocationOptions(){
         $arrayLocations = [];
-        $locations = self::get();
+        $user = BackendAuth::getUser();
+        $userId = $user->id;        
+        $userGroups = $user->groups;                
+        if ($userGroups) {
+            foreach ($userGroups as $group) {                
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                    $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                                        
+                    $arrProject = [];
+                    foreach($userProjects as $item){
+                        array_push($arrProject, $item->id);
+                    }                    
+                    $projects = self::whereIn('id',$arrProject)->get();
+                    $arr = [];
+                    foreach($projects as $project){
+                        array_push($arr, $project->id);
+                    }
+                    $locations = self::whereIn('project_id',$arr)->get();
+                }
+                else{                    
+                    $locations = self::get();
+                }
+            }            
+        }  
         foreach($locations as $location){            
            $arrayLocations[$location->id] = $location->location_name.' - '.$location->project->project_name;
         }
