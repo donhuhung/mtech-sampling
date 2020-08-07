@@ -53,8 +53,8 @@ class Projects extends Model
                     $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                                        
                     $arr = [];
                     foreach($userProjects as $item){
-                        array_push($arr, $item->id);
-                    }                    
+                        array_push($arr, $item->project_id);
+                    }                             
                     $projects = self::whereIn('id',$arr)->get();
                 }
                 else{                    

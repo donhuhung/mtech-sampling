@@ -4,11 +4,12 @@ scopes:
       modelClass: Mtech\Sampling\Models\Customers
       nameFrom: name
       scope: filterByCustomer
-  gift:
+  gift:      
       label: Gift
+      type: group
+      conditions: gift_id in (:filtered)
       modelClass: Mtech\Sampling\Models\Gifts
-      nameFrom: gift_name
-      scope: filterByGift
+      options: getGiftOptions
   location:
       label: Location
       type: group

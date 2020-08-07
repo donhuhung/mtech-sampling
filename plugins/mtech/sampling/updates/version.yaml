@@ -180,3 +180,9 @@
 1.0.61:
     - 'Updated table mtech_sampling_product'
     - builder_table_update_mtech_sampling_product_4.php
+1.0.62:
+    - 'Updated table mtech_sampling_projects'
+    - builder_table_update_mtech_sampling_projects_7.php
+1.0.63:
+    - 'Updated table mtech_sampling_projects'
+    - builder_table_update_mtech_sampling_projects_8.php

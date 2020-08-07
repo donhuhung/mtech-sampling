@@ -342,7 +342,8 @@ class User extends General {
                     $fileName = $fileName . "_checkin.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);
-                    $historyPG->checkin_image = $projectId . '/' . $locationId . '/' . $now . '/' . $fileName;
+                    $filePath = $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/'.$fileName;
+                    $historyPG->checkin_image = $filePath;
                     $historyPG->latitude_chekin = $latitudeChekin;
                     $historyPG->longitude_checkin = $longitudeCheckin;
                     $historyPG->save();
@@ -417,7 +418,8 @@ class User extends General {
                     $fileName = $fileName . "_checkout.png";
                     $userImage->move($destinationPath, $fileName);
                     $historyPG = $this->checkHistoryPG($userId, true);
-                    $historyPG->checkout_image = $projectId . '/' . $locationId . '/' . $now . '/' . $fileName;
+                    $filePath = $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/'.$fileName;
+                    $historyPG->checkout_image = $filePath;
                     $historyPG->latitude_checkout = $latitudeCheckout;
                     $historyPG->longitude_checkout = $longitudeCheckout;
                     $historyPG->save();

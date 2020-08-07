@@ -109,6 +109,12 @@ class Plugin extends PluginBase {
                 }
             }
         });
+        
+        //Register Command Line
+        $this->app->singleton('sampling:update_status_project', function() {
+            return new \Mtech\Sampling\Console\UpdateStatusProject;
+        });
+        $this->commands('sampling:update_status_project');
     }
 
     /**
@@ -356,6 +362,10 @@ class Plugin extends PluginBase {
 
         $dateMade = date_diff(date_create($now), date_create($startDate));
         $dateMade = $dateMade->format("%a");
+        
+        if($dateMade > $totalDate){
+            return $totalDate . '/' . $totalDate;
+        }        
         return $dateMade . '/' . $totalDate;
     }
 
@@ -387,6 +397,10 @@ class Plugin extends PluginBase {
             $totalGiftInventory += $location->gift_inventory;
         }
         return $totalGiftInventory;
+    }
+    
+    public function registerSchedule($schedule) {
+        $schedule->command('sampling:update_status_project')->dailyAt('01:00');
     }
 
 }

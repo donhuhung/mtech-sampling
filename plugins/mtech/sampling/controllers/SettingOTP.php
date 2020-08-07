@@ -2,6 +2,8 @@
 
 use BackendMenu;
 use Backend\Classes\Controller;
+use BackendAuth;
+use DB;
 
 /**
  * Setting O T P Back-end Controller
@@ -31,5 +33,23 @@ class SettingOTP extends Controller
         parent::__construct();
 
         BackendMenu::setContext('Mtech.Sampling', 'sampling', 'settingotp');
+    }
+    
+    public function listExtendQuery($query) {
+        $user = BackendAuth::getUser();
+        $userId = $user->id;
+        $userGroups = $user->groups;
+        $arrProject = [];
+        if ($userGroups) {
+            foreach ($userGroups as $group) {
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                    $projects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                    
+                    foreach($projects as $project){
+                        array_push($arrProject, $project->project_id);
+                    }                    
+                    $query->whereIn('project_id',$arrProject);
+                }
+            }
+        }
     }
 }

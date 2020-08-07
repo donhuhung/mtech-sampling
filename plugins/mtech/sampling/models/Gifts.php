@@ -6,6 +6,7 @@ use Model;
 use Mtech\Sampling\Models\Projects;
 use Mtech\Sampling\Models\Locations;
 use Mtech\Sampling\Models\CustomerGifts;
+use BackendAuth;
 use DB;
 
 /**
@@ -88,4 +89,41 @@ class Gifts extends Model {
         return $arrLocation;
     }
 
+    public function getGiftOptions(){
+        $arrayGifts = [];
+        $user = BackendAuth::getUser();
+        $userId = $user->id;        
+        $userGroups = $user->groups;                
+        if ($userGroups) {
+            foreach ($userGroups as $group) {                
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                    $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                                        
+                    $arrProject = [];
+                    foreach($userProjects as $item){
+                        array_push($arrProject, $item->id);
+                    }
+                    //Get List Project                    
+                    $projects = self::whereIn('id',$arrProject)->get();
+                    $arr = [];
+                    foreach($projects as $project){
+                        array_push($arr, $project->id);
+                    }
+                    //Get List Location
+                    $arrLocation = [];
+                    $locations = Locations::whereIn('project_id',$arr)->get();
+                    foreach($locations as $location){
+                        array_push($arrLocation, $location->id);
+                    }
+                    $gifts = self::whereIn('location_id',$arrLocation)->get();
+                }
+                else{                    
+                    $gifts = self::get();
+                }
+            }            
+        }  
+        foreach($gifts as $gift){            
+           $arrayGifts[$gift->id] = $gift->gift_name;
+        }
+        return $arrayGifts;
+    }
 }

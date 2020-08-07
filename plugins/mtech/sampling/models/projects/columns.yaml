@@ -30,3 +30,6 @@ columns:
     kpi_day_gift:
         label: KPI/Day
         type: text
+    user_receive_gift:
+        label: 'User Receive Gift'
+        type: text

@@ -12,6 +12,7 @@ use RainLab\User\Models\User;
 use RainLab\User\Models\UserGroup;
 use RainLab\User\Models\MailBlocker;
 use RainLab\User\Models\Settings as UserSettings;
+use DB;
 
 class Users extends Controller
 {
@@ -83,7 +84,22 @@ class Users extends Controller
 
     public function listExtendQuery($query)
     {
-        $query->withTrashed();
+        $user = BackendAuth::getUser();
+        $userId = $user->id;        
+        $userGroups = $user->groups;
+        $arrUsers = [];
+        if ($userGroups) {
+            foreach ($userGroups as $group) {
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                    $projects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                    
+                    foreach($projects as $project){
+                        array_push($arrUsers, $project->user_id);
+                    }                       
+                    $query->where('id',2);
+                    $query->withTrashed();
+                }
+            }
+        }
     }
 
     public function formExtendQuery($query)

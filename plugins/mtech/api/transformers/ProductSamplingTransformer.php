@@ -12,6 +12,7 @@ class ProductSamplingTransformer extends Fractal\TransformerAbstract {
         return [
             'id' => (int) $product->id,
             'name' => $product->name,            
+            'project_id' => $product->project_id,            
             'createdAt' => Carbon::parse($product->created_at)->format('Y-m-d'),
         ];
     }

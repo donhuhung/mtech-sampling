@@ -86,15 +86,19 @@ class Setting extends General {
      */
     public function getProductSampling(Request $request) {
         try {
-            $arrProject = [];
-            $projects = Projects::where('status',1)->get();
-            if(!$projects){
-                return $this->respondWithMessage('Data not found!');
+            $user = JWTAuth::parseToken()->authenticate();
+            $userId = $user->id;
+            $locations = UserLocations::where('user_id', $userId)->get();
+            $projectId = 0;
+            if ($locations) {
+                foreach ($locations as $location) {
+                    $locationData = Locations::find($location->location_id);                    
+                    $projectStatus = $locationData->project->status;
+                    if($projectStatus)
+                        $projectId = $locationData->project->id;
+                }
             }
-            foreach($projects as $project){
-                array_push($arrProject, $project->id);
-            }
-            $products = $this->productSamplingRepository->where('status',1)->whereIn('id',$arrProject)->get();
+            $products = $this->productSamplingRepository->where('status',1)->where('project_id',$projectId)->get();
             if (!$products) {
                 return $this->respondWithMessage('Data not found!');
             }

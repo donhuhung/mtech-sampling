@@ -29,3 +29,7 @@ fields:
         label: Status
         span: auto
         type: switch
+    user_receive_gift:
+        label: 'User Receive Gift'
+        span: auto
+        type: number

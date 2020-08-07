@@ -97,7 +97,6 @@ class Customer extends General {
                             ->where('phone', $phone)
                             ->where('otp', $otp)
                             ->where('user_id', $userId)->first();
-            $customer = "";
 
             if (!$checkValidOTP) {
                 return $this->respondWithError('Mã OTP không hợp lệ!', self::HTTP_BAD_REQUEST);
@@ -110,10 +109,13 @@ class Customer extends General {
                     return $this->respondWithError('Mã OTP đã hết hạn, Vui lòng đăng ký lại dịch vụ!', self::HTTP_BAD_REQUEST);
                 }
             }
-            if ($phone) {
-                $customer = $this->customerRepository->where('phone', $phone)->where('otp', $otp)->first();
+            $location = Locations::find($locationId);
+            if(!$location){
+                return $this->respondWithError('Data không hợp lệ!', self::HTTP_BAD_REQUEST);
             }
-            if ($customer) {
+            $userReceiveGift = $location->project->user_receive_gift;            
+            $customer = $this->customerRepository->where('phone', $phone)->where('location_id',$locationId)->where('otp', $otp)->get();            
+            if (count($customer) >= $userReceiveGift) {
                 return $this->respondWithError('Số điện thoại này đã nhận quà từ chương trình', self::HTTP_BAD_REQUEST);
             }
 

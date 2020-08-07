@@ -7,6 +7,8 @@ use Event;
 use October\Rain\Auth\Models\User as UserBase;
 use RainLab\User\Models\Settings as UserSettings;
 use October\Rain\Auth\AuthException;
+use Mtech\Sampling\Models\Projects;
+use Mtech\Sampling\Models\Locations;
 
 class User extends UserBase
 {
@@ -454,5 +456,15 @@ class User extends UserBase
     public function getCountryIdOptions() {
         $countries = Country::lists('name', 'id');
         return $countries;
+    }
+    
+    public function getLocationOptions() {
+        $locations = Locations::get();
+        $arrLocation = [];
+        foreach ($locations as $location) {
+            $projectName = $location->project->project_name;
+            $arrLocation[$location->id] = $location->location_name . ' - ' . $projectName;
+        }
+        return $arrLocation;
     }
 }
