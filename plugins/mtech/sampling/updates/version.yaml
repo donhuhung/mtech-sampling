@@ -186,3 +186,12 @@
 1.0.63:
     - 'Updated table mtech_sampling_projects'
     - builder_table_update_mtech_sampling_projects_8.php
+1.0.64:
+    - 'Updated table mtech_sampling_gifts'
+    - builder_table_update_mtech_sampling_gifts_5.php
+1.0.65:
+    - 'Updated table mtech_sampling_gifts'
+    - builder_table_update_mtech_sampling_gifts_6.php
+1.0.66:
+    - 'Created table mtech_sampling_location_gift'
+    - builder_table_create_mtech_sampling_location_gift.php

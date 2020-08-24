@@ -8,7 +8,7 @@
     <button
         class="btn btn-danger oc-icon-trash-o"
         disabled="disabled"
-        onclick="$(this).data('request-data', { checked: $('.control-list').listWidget('getChecked') })"
+        onclick="$(this).data('request-data', {checked: $('.control-list').listWidget('getChecked')})"
         data-request="onDelete"
         data-request-confirm="Are you sure you want to delete the selected History P Gs?"
         data-trigger-action="enable"
@@ -22,6 +22,12 @@
         href="<?= Backend::url('mtech/sampling/historypg/export') ?>"
         class="btn btn-primary oc-icon-download">
         Export
+    </a>
+
+    <a
+        href="<?= Backend::url('mtech/sampling/historypg/downloadfilezip') ?>"
+        class="btn btn-primary oc-icon-download">
+        Export Image
     </a>
 
 </div>

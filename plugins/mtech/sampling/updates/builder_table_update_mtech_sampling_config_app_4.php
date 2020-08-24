@@ -9,7 +9,7 @@ class BuilderTableUpdateMtechSamplingConfigApp4 extends Migration
     {
         Schema::table('mtech_sampling_config_app', function($table)
         {
-            $table->integer('allow_capture_customer');
+            $table->integer('number_receive_gift')->nullable();
         });
     }
     
@@ -17,7 +17,7 @@ class BuilderTableUpdateMtechSamplingConfigApp4 extends Migration
     {
         Schema::table('mtech_sampling_config_app', function($table)
         {
-            $table->dropColumn('allow_capture_customer');
+            $table->dropColumn('number_receive_gift');
         });
     }
 }

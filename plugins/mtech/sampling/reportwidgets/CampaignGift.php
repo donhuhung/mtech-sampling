@@ -4,8 +4,12 @@ namespace Mtech\Sampling\ReportWidgets;
 
 use Backend\Classes\ReportWidgetBase;
 use Mtech\Sampling\Models\Projects;
+use Mtech\Sampling\Models\Locations;
+use Mtech\Sampling\Models\LocationGift;
 use ApplicationException;
 use Exception;
+use BackendAuth;
+use DB;
 
 /**
  * CampaignGift widget.
@@ -48,35 +52,61 @@ class CampaignGift extends ReportWidgetBase {
                 'title' => 'rainlab.googleanalytics::lang.widgets.traffic_sources_center',
                 'type' => 'checkbox'
             ],
-            'legendAsTable' => [
-                'title' => 'rainlab.googleanalytics::lang.widgets.legend_as_table',
-                'type' => 'checkbox',
-                'default' => 1
-            ],
-            'days' => [
-                'title' => 'rainlab.googleanalytics::lang.widgets.days',
-                'default' => '30',
-                'type' => 'string',
-                'validationPattern' => '^[0-9]+$'
-            ],
-            'number' => [
-                'title' => 'rainlab.googleanalytics::lang.widgets.traffic_sources_number',
-                'default' => '10',
-                'type' => 'string',
-                'validationPattern' => '^[0-9]+$'
-            ],
-            'displayDescription' => [
-                'title' => 'rainlab.googleanalytics::lang.widgets.display_description',
-                'type' => 'checkbox',
-                'default' => 1
-            ]
         ];
     }
 
     protected function loadData() {
-        $this->vars['id'] = 1;
-        $this->vars['name'] = 2;
-        $this->vars['value'] = 3;
+        $user = BackendAuth::getUser();
+        $userId = $user->id;
+        $userGroups = $user->groups;
+        $arrProject = [];
+        $data = [];
+        if ($userGroups) {
+            foreach ($userGroups as $group) {
+                if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                    $projects = DB::table('mtech_sampling_backend_users_projects')->where('user_id', $userId)->get();
+                    foreach ($projects as $project) {
+                        array_push($arrProject, $project->project_id);
+                    }
+                    $projects = Projects::whereIn('id', $arrProject)->where('status', 1)->get();
+                    foreach ($projects as $index => $project) {
+                        $projectId = $project->id;
+                        $locations = Locations::where('project_id', $projectId)->get();
+                        $totalGiftInventory = 0;
+                        foreach ($locations as $location) {
+                            $locationGifts = LocationGift::where('location_id', $location->id)->get();
+                            foreach ($locationGifts as $item) {
+                                $totalGiftInventory += $item->total_gift - $item->gift_inventory;
+                                $kpi = $item->total_gift;
+                            }
+                        }
+                        $data[$index]['project_name'] = $project->project_name;
+                        $data[$index]['project_id'] = $projectId;
+                        $data[$index]['kpi'] = $kpi;
+                        $data[$index]['totalGiftInventory'] = $totalGiftInventory > 0 ? $totalGiftInventory : $kpi;
+                    }
+                } else {
+                    $projects = Projects::where('status', 1)->get();
+                    foreach ($projects as $index => $project) {
+                        $projectId = $project->id;
+                        $locations = Locations::where('project_id', $projectId)->get();
+                        $totalGiftInventory = 0;
+                        foreach ($locations as $location) {
+                            $locationGifts = LocationGift::where('location_id', $location->id)->get();
+                            foreach ($locationGifts as $item) {
+                                $totalGiftInventory += $item->total_gift - $item->gift_inventory;
+                                $kpi = $item->total_gift;
+                            }
+                        }
+                        $data[$index]['project_name'] = $project->project_name;
+                        $data[$index]['project_id'] = $projectId;
+                        $data[$index]['kpi'] = $kpi;
+                        $data[$index]['totalGiftInventory'] = $totalGiftInventory > 0 ? $totalGiftInventory : $kpi;
+                    }
+                }
+            }
+        }
+        $this->vars['rows'] = $data;
     }
 
 }

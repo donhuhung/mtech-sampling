@@ -1,8 +1,11 @@
-<?php namespace Mtech\Sampling\Models;
+<?php
+
+namespace Mtech\Sampling\Models;
 
 use Model;
 use Mtech\Sampling\Models\Gifts;
 use Mtech\Sampling\Models\Projects;
+use Mtech\Sampling\Models\LocationGift;
 use RainLab\User\Models\User As UserModel;
 use BackendAuth;
 use DB;
@@ -10,10 +13,9 @@ use DB;
 /**
  * Model
  */
-class Locations extends Model
-{
+class Locations extends Model {
+
     use \October\Rain\Database\Traits\Validation;
-    
 
     /**
      * @var string The database table used by the model.
@@ -24,76 +26,78 @@ class Locations extends Model
      * @var array Validation rules
      */
     public $rules = [];
-    
+
     /**
      * @var array Relations
      */
     public $hasOne = [];
     public $hasMany = [
-        'gift' => ['Mtech\Sampling\Models\Gifts','key' => 'location_id', 'otherKey' => 'id'],        
+        'locationGifts' => ['Mtech\Sampling\Models\LocationGift','key' => 'location_id', 'otherKey' => 'id'],        
     ];
     public $belongsTo = [
-        'project' => ['Mtech\Sampling\Models\Projects','key' => 'project_id'],        
+        'project' => ['Mtech\Sampling\Models\Projects', 'key' => 'project_id'],
         'district' => 'Mtech\Sampling\Models\Districts'
     ];
     public $belongsToMany = [
         'users' => [
-            'RainLab\User\Models\User', 
+            'RainLab\User\Models\User',
             'table' => 'mtech_sampling_user_location',
-            'key'      => 'location_id',
+            'key' => 'location_id',
             'otherKey' => 'user_id'
-            ]
+        ]/*,
+        'locationGifts' => [
+            'Mtech\Sampling\Models\Locations',
+            'table' => 'mtech_sampling_location_gift',
+            'key' => 'location_id',
+            'otherKey' => 'gift_id'
+        ]*/
     ];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
-    
-     /**
+
+    /**
      * @return mixed
      */
-    
-    public function getLocationOptions(){
+    public function getLocationOptions() {
         $arrayLocations = [];
         $user = BackendAuth::getUser();
-        $userId = $user->id;        
-        $userGroups = $user->groups;                
+        $userId = $user->id;
+        $userGroups = $user->groups;
         if ($userGroups) {
-            foreach ($userGroups as $group) {                
+            foreach ($userGroups as $group) {
                 if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
-                    $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                                        
+                    $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id', $userId)->get();
                     $arrProject = [];
-                    foreach($userProjects as $item){
+                    foreach ($userProjects as $item) {
                         array_push($arrProject, $item->id);
-                    }                    
-                    $projects = self::whereIn('id',$arrProject)->get();
+                    }
+                    $projects = self::whereIn('id', $arrProject)->get();
                     $arr = [];
-                    foreach($projects as $project){
+                    foreach ($projects as $project) {
                         array_push($arr, $project->id);
                     }
-                    $locations = self::whereIn('project_id',$arr)->get();
-                }
-                else{                    
+                    $locations = self::whereIn('project_id', $arr)->get();
+                } else {
                     $locations = self::get();
                 }
-            }            
-        }  
-        foreach($locations as $location){            
-           $arrayLocations[$location->id] = $location->location_name.' - '.$location->project->project_name;
+            }
+        }
+        foreach ($locations as $location) {
+            $arrayLocations[$location->id] = $location->location_name . ' - ' . $location->project->project_name;
         }
         return $arrayLocations;
     }
-    
-    
-    public function getGiftInfoAttribute()
-    {
-        $gifts = Gifts::where('location_id', $this->id)->get();
+
+    public function getLocationGiftsInfoAttribute() {
+        $gifts = LocationGift::where('location_id', $this->id)->get();
         return $gifts;
     }
-    
+
     public function scopeFilterByProject($query, $filter) {
         return $query->whereHas('project', function($project) use ($filter) {
                     $project->whereIn('id', $filter);
                 });
     }   
-        
+
 }

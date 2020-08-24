@@ -6,33 +6,21 @@ columns:
         label: gift_name
         type: text
         searchable: true
-    location_id:
-        label: Location
-        type: location-project        
+    project_id:
+        label: Project
+        relation: project
+        select: project_name
         searchable: true
     category_gift:
         label: Category
         relation: category
         select: name
         searchable: true
-    location_id:
-        label: Location
-        relation: location
-        select: location_name
     product_brand:
         label: 'Product Brand'
         relation: productBrand
         select: name
-        searchable: true
-    total_gift:
-        label: total_gift
-        type: number
-    gift_inventory:
-        label: gift_inventory
-        type: number
+        searchable: true    
     created_at:
         label: created_at
-        type: datetime
-    updated_at:
-        label: updated_at
         type: datetime

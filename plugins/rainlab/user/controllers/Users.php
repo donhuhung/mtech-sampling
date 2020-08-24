@@ -1,4 +1,6 @@
-<?php namespace RainLab\User\Controllers;
+<?php
+
+namespace RainLab\User\Controllers;
 
 use Auth;
 use Lang;
@@ -12,17 +14,19 @@ use RainLab\User\Models\User;
 use RainLab\User\Models\UserGroup;
 use RainLab\User\Models\MailBlocker;
 use RainLab\User\Models\Settings as UserSettings;
+use Mtech\Sampling\Models\Projects;
+use Mtech\Sampling\Models\Locations;
 use DB;
 
-class Users extends Controller
-{
+class Users extends Controller {
+
     /**
      * @var array Extensions implemented by this controller.
      */
     public $implement = [
         \Backend\Behaviors\FormController::class,
         \Backend\Behaviors\ListController::class,
-		\Backend\Behaviors\RelationController::class
+        \Backend\Behaviors\RelationController::class
     ];
 
     /**
@@ -53,16 +57,14 @@ class Users extends Controller
     /**
      * Constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         BackendMenu::setContext('RainLab.User', 'user', 'users');
         SettingsManager::setContext('RainLab.User', 'settings');
     }
 
-    public function index()
-    {
+    public function index() {
         $this->addJs('/plugins/rainlab/user/assets/js/bulk-actions.js');
 
         $this->asExtension('ListController')->index();
@@ -71,8 +73,7 @@ class Users extends Controller
     /**
      * {@inheritDoc}
      */
-    public function listInjectRowClass($record, $definition = null)
-    {
+    public function listInjectRowClass($record, $definition = null) {
         if ($record->trashed()) {
             return 'strike';
         }
@@ -82,57 +83,62 @@ class Users extends Controller
         }
     }
 
-    public function listExtendQuery($query)
-    {
+    public function listExtendQuery($query) {
         $user = BackendAuth::getUser();
-        $userId = $user->id;        
+        $userId = $user->id;
         $userGroups = $user->groups;
+        $arrProjects = [];
         $arrUsers = [];
+        $arrLocations = [];
         if ($userGroups) {
             foreach ($userGroups as $group) {
                 if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
-                    $projects = DB::table('mtech_sampling_backend_users_projects')->where('user_id',$userId)->get();                    
-                    foreach($projects as $project){
-                        array_push($arrUsers, $project->user_id);
-                    }                       
-                    $query->where('id',2);
+                    $userProjects = DB::table('mtech_sampling_backend_users_projects')->where('user_id', $userId)->get();
+                    foreach ($userProjects as $item) {
+                        array_push($arrProjects, $item->project_id);
+                    }
+                    $locations = Locations::whereIn('project_id', $arrProjects)->get();
+                    foreach ($locations as $location) {
+                        array_push($arrLocations, $location->id);
+                    }
+                    $userLocations = DB::table('mtech_sampling_user_location')->whereIn('location_id', $arrLocations)->get();
+                    foreach ($userLocations as $user) {
+                        array_push($arrUsers, $user->user_id);
+                    }
+                    $query->whereIn('id', $arrUsers);
                     $query->withTrashed();
                 }
             }
         }
     }
 
-    public function formExtendQuery($query)
-    {
+    public function formExtendQuery($query) {
         $query->withTrashed();
     }
 
     /**
      * Display username field if settings permit
      */
-    public function formExtendFields($form)
-    {
+    public function formExtendFields($form) {
         /*
          * Show the username field if it is configured for use
          */
         if (
-            UserSettings::get('login_attribute') == UserSettings::LOGIN_USERNAME &&
-            array_key_exists('username', $form->getFields())
+                UserSettings::get('login_attribute') == UserSettings::LOGIN_USERNAME &&
+                array_key_exists('username', $form->getFields())
         ) {
             $form->getField('username')->hidden = false;
         }
     }
 
-    public function formAfterUpdate($model)
-    {
+    public function formAfterUpdate($model) {
         $blockMail = post('User[block_mail]', false);
         if ($blockMail !== false) {
             $blockMail ? MailBlocker::blockAll($model) : MailBlocker::unblockAll($model);
         }
     }
 
-    public function formExtendModel($model)
-    {
+    public function formExtendModel($model) {
         $model->block_mail = MailBlocker::isBlockAll($model);
 
         $model->bindEvent('model.saveInternal', function() use ($model) {
@@ -143,8 +149,7 @@ class Users extends Controller
     /**
      * Manually activate a user
      */
-    public function preview_onActivate($recordId = null)
-    {
+    public function preview_onActivate($recordId = null) {
         $model = $this->formFindModelObject($recordId);
 
         $model->attemptActivation($model->activation_code);
@@ -155,12 +160,11 @@ class Users extends Controller
             return $redirect;
         }
     }
-    
+
     /**
      * Manually Block a user
      */
-    public function preview_onBlockUser($recordId = null)
-    {
+    public function preview_onBlockUser($recordId = null) {
         $model = $this->formFindModelObject($recordId);
         $model->is_activated = 0;
 
@@ -176,8 +180,7 @@ class Users extends Controller
     /**
      * Manually unban a user
      */
-    public function preview_onUnban($recordId = null)
-    {
+    public function preview_onUnban($recordId = null) {
         $model = $this->formFindModelObject($recordId);
 
         $model->unban();
@@ -192,8 +195,7 @@ class Users extends Controller
     /**
      * Display the convert to registered user popup
      */
-    public function preview_onLoadConvertGuestForm($recordId)
-    {
+    public function preview_onLoadConvertGuestForm($recordId) {
         $this->vars['groups'] = UserGroup::where('code', '!=', UserGroup::GROUP_GUEST)->get();
 
         return $this->makePartial('convert_guest_form');
@@ -202,8 +204,7 @@ class Users extends Controller
     /**
      * Manually convert a guest user to a registered one
      */
-    public function preview_onConvertGuest($recordId)
-    {
+    public function preview_onConvertGuest($recordId) {
         $model = $this->formFindModelObject($recordId);
 
         // Convert user and send notification
@@ -216,8 +217,8 @@ class Users extends Controller
 
         // Add user to new group
         if (
-            ($groupId = post('new_group')) &&
-            ($group = UserGroup::find($groupId))
+                ($groupId = post('new_group')) &&
+                ($group = UserGroup::find($groupId))
         ) {
             $model->groups()->add($group);
         }
@@ -232,8 +233,7 @@ class Users extends Controller
     /**
      * Impersonate this user
      */
-    public function preview_onImpersonateUser($recordId)
-    {
+    public function preview_onImpersonateUser($recordId) {
         if (!$this->user->hasAccess('rainlab.users.impersonate_user')) {
             return Response::make(Lang::get('backend::lang.page.access_denied.label'), 403);
         }
@@ -248,8 +248,7 @@ class Users extends Controller
     /**
      * Force delete a user.
      */
-    public function update_onDelete($recordId = null)
-    {
+    public function update_onDelete($recordId = null) {
         $model = $this->formFindModelObject($recordId);
 
         $model->forceDelete();
@@ -264,13 +263,12 @@ class Users extends Controller
     /**
      * Perform bulk action on selected users
      */
-    public function index_onBulkAction()
-    {
+    public function index_onBulkAction() {
         if (
-            ($bulkAction = post('action')) &&
-            ($checkedIds = post('checked')) &&
-            is_array($checkedIds) &&
-            count($checkedIds)
+                ($bulkAction = post('action')) &&
+                ($checkedIds = post('checked')) &&
+                is_array($checkedIds) &&
+                count($checkedIds)
         ) {
 
             foreach ($checkedIds as $userId) {
@@ -305,12 +303,12 @@ class Users extends Controller
                 }
             }
 
-            Flash::success(Lang::get('rainlab.user::lang.users.'.$bulkAction.'_selected_success'));
-        }
-        else {
-            Flash::error(Lang::get('rainlab.user::lang.users.'.$bulkAction.'_selected_empty'));
+            Flash::success(Lang::get('rainlab.user::lang.users.' . $bulkAction . '_selected_success'));
+        } else {
+            Flash::error(Lang::get('rainlab.user::lang.users.' . $bulkAction . '_selected_empty'));
         }
 
         return $this->listRefresh();
     }
+
 }

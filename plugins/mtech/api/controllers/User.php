@@ -336,7 +336,7 @@ class User extends General {
                         $projectName = HelperClass::getAlias($locationData->project->project_name);
                     }
                     $prefixName = $user->name;
-                    $fileName = HelperClass::convert_vi_to_en($prefixName);
+                    $fileName = HelperClass::getAlias(HelperClass::convert_vi_to_en($prefixName));
                     $fileName = preg_replace('/\s+/', '_', $fileName);
                     $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                     $fileName = $fileName . "_checkin.png";
@@ -412,7 +412,7 @@ class User extends General {
                         $projectName = HelperClass::getAlias($locationData->project->project_name);
                     }
                     $prefixName = $user->name;
-                    $fileName = HelperClass::convert_vi_to_en($prefixName);
+                    $fileName = HelperClass::getAlias(HelperClass::convert_vi_to_en($prefixName));
                     $fileName = preg_replace('/\s+/', '_', $fileName);
                     $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
                     $fileName = $fileName . "_checkout.png";

@@ -6,6 +6,7 @@ use Model;
 use Mtech\Sampling\Models\Projects;
 use Mtech\Sampling\Models\Locations;
 use Mtech\Sampling\Models\CustomerGifts;
+use Mtech\Sampling\Models\LocationGift;
 use BackendAuth;
 use DB;
 
@@ -34,7 +35,7 @@ class Gifts extends Model {
     public $belongsTo = [
         'category' => ['Mtech\Sampling\Models\CategoryGifts', 'key' => 'category_gift'],
         'productBrand' => ['Mtech\Sampling\Models\ProductBrands', 'key' => 'product_brand'],
-        'location' => ['Mtech\Sampling\Models\Locations', 'key' => 'location_id']
+        'project' => ['Mtech\Sampling\Models\Projects', 'key' => 'project_id']
     ];
     public $belongsToMany = [];
     public $morphTo = [];
@@ -50,17 +51,17 @@ class Gifts extends Model {
     public function processRandomGift($user_id, $location_id, $numberReceiveGift) {
         //random gift 
         $arrGift = [];
-        for ($i = 0; $i < $numberReceiveGift; $i++) {
-            $data = $this->whereRaw('gift_inventory > 0 ')
+        for ($i = 0; $i < $numberReceiveGift; $i++) {            
+            $data = LocationGift::whereRaw('gift_inventory > 0 ')
                     ->where('location_id', $location_id)
                     ->orderByRaw('RAND()')
                     ->first();
             if ($data) {
-                $gift_id = $data->id;
+                $gift_id = $data->gift_id;
                 $location_id = $data->location_id;
-                //update number gift random    
-                Db::table('mtech_sampling_locations')->where('id', $location_id)->decrement('gift_inventory');
-                Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('gift_inventory');
+                //update number gift random                    
+                Db::table('mtech_sampling_location_gift')->where('location_id', $location_id)->where('gift_id', $gift_id)->decrement('gift_inventory');                        
+                //Db::table('mtech_sampling_gifts')->where('id', $gift_id)->decrement('gift_inventory');
                 $this->insertUserReceiveGift($user_id, $gift_id, $location_id);
                 array_push($arrGift, $gift_id);
             }
@@ -87,6 +88,10 @@ class Gifts extends Model {
             $arrLocation[$location->id] = $location->location_name . ' - ' . $projectName;
         }
         return $arrLocation;
+    }
+    
+    public function getGiftNameOptions(){
+        return self::lists('gift_name','id');
     }
 
     public function getGiftOptions(){

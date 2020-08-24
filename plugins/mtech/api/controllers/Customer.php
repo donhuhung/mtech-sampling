@@ -12,6 +12,7 @@ use Mtech\Sampling\Models\OTP;
 use Mtech\Sampling\Models\Setting;
 use Mtech\Sampling\Models\UserLocations;
 use Mtech\Sampling\Models\SettingOTP;
+use Mtech\Sampling\Models\ConfigApp;
 use RainLab\User\Models\User As UserModel;
 use Mtech\API\Transformers\GiftTransformer;
 use Mtech\API\Transformers\CustomerTransformer;
@@ -33,14 +34,16 @@ class Customer extends General {
     protected $giftRepository;
     protected $locationRepository;
     protected $otpRepository;
+    protected $configAppRepository;
 
-    public function __construct(Customers $customer, CustomerGifts $customerGift, Gifts $gift, Projects $project, Locations $location, OTP $otp) {
+    public function __construct(Customers $customer, CustomerGifts $customerGift, Gifts $gift, Projects $project, Locations $location, OTP $otp, ConfigApp $configApp) {
         $this->customerRepository = $customer;
         $this->customerGiftRepository = $customerGift;
         $this->giftRepository = $gift;
         $this->projectRepository = $project;
         $this->locationRepository = $location;
         $this->otpRepository = $otp;
+        $this->configAppRepository = $configApp;
     }
 
     /**
@@ -98,23 +101,29 @@ class Customer extends General {
                             ->where('otp', $otp)
                             ->where('user_id', $userId)->first();
 
-            if (!$checkValidOTP) {
-                return $this->respondWithError('Mã OTP không hợp lệ!', self::HTTP_BAD_REQUEST);
-            }
-            if ($checkValidOTP) {
-                $createdDate = $checkValidOTP->created_at;
-                $resultDate = date_diff(date_create($now), date_create($createdDate));
-                $resultDate = $resultDate->format("%s");
-                if ($resultDate > $timeExpiredOTP) {
-                    return $this->respondWithError('Mã OTP đã hết hạn, Vui lòng đăng ký lại dịch vụ!', self::HTTP_BAD_REQUEST);
+            $location = Locations::find($locationId);
+            $projectID = $location->project->id;
+            $configProject = $this->configAppRepository->where('project_id', $projectID)->first();
+            $showOTP = $configProject->show_customer_otp;
+            if ($showOTP) {
+                if (!$checkValidOTP) {
+                    return $this->respondWithError('Mã OTP không hợp lệ!', self::HTTP_BAD_REQUEST);
+                }
+                if ($checkValidOTP) {
+                    $createdDate = $checkValidOTP->created_at;
+                    $resultDate = date_diff(date_create($now), date_create($createdDate));
+                    $resultDate = $resultDate->format("%i");
+                    $resultDate = $resultDate * 60;
+                    if ($resultDate > $timeExpiredOTP) {
+                        return $this->respondWithError('Mã OTP đã hết hạn, Vui lòng đăng ký lại dịch vụ!', self::HTTP_BAD_REQUEST);
+                    }
                 }
             }
-            $location = Locations::find($locationId);
-            if(!$location){
+            if (!$location) {
                 return $this->respondWithError('Data không hợp lệ!', self::HTTP_BAD_REQUEST);
             }
-            $userReceiveGift = $location->project->user_receive_gift;            
-            $customer = $this->customerRepository->where('phone', $phone)->where('location_id',$locationId)->where('otp', $otp)->get();            
+            $userReceiveGift = $location->project->user_receive_gift;
+            $customer = $this->customerRepository->where('phone', $phone)->where('location_id', $locationId)->get();
             if (count($customer) >= $userReceiveGift) {
                 return $this->respondWithError('Số điện thoại này đã nhận quà từ chương trình', self::HTTP_BAD_REQUEST);
             }
@@ -127,7 +136,9 @@ class Customer extends General {
             $customerInfo = $this->customerRepository->create($arrCustomer);
 
             //Delete OTP
-            Db::table('mtech_sampling_otp')->where('id', $checkValidOTP->id)->delete();
+            if($showOTP){
+                Db::table('mtech_sampling_otp')->where('id', $checkValidOTP->id)->delete();
+            }
             $results = fractal($customerInfo, new CustomerTransformer())->toArray();
             return $this->respondWithSuccess($results, ('Store Customer successful!'));
         } catch (\Exception $ex) {
@@ -182,8 +193,8 @@ class Customer extends General {
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
                 $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
-                $fileNameAvatar = $fileName . "_avatar.png";
-                $fileNameBill = $fileName . "_bill.png";
+                $filePath = $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/';
+                $fileNameBill = $filePath . $fileName . "_bill.png";
                 $billImage->move($destinationPath, $fileNameBill);
             }
             //Update Customer            
@@ -243,7 +254,8 @@ class Customer extends General {
                 $fileName = HelperClass::convert_vi_to_en($prefixName);
                 $fileName = preg_replace('/\s+/', '_', $fileName);
                 $destinationPath = storage_path('app/media/' . $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/');
-                $fileNameAvatar = $fileName . "_avatar.png";
+                $filePath = $projectName . '_' . $projectId . '/' . $locationName . '_' . $locationId . '/' . $now . '/';
+                $fileNameAvatar = $filePath . $fileName . "_avatar.png";
                 $customerAvatar->move($destinationPath, $fileNameAvatar);
             }
             //Update Customer            
@@ -325,7 +337,17 @@ class Customer extends General {
             $phone = $request->get('phone');
             $user = JWTAuth::parseToken()->authenticate();
             $userId = $user->id;
-            $lengthOTP = Setting::get('length_otp');
+            $locations = UserLocations::where('user_id', $userId)->get();
+            $projectID = 0;
+            foreach ($locations as $location) {
+                $locationID = $location->location_id;
+                $locationData = Locations::find($locationID);
+                $projectStatus = $locationData->project->status;
+                if ($projectStatus)
+                    $projectID = $locationData->project_id;
+            }
+            $settingOTP = SettingOTP::where('project_id', $projectID)->first();
+            $lengthOTP = $settingOTP->length_otp;
             $otpString = HelperClass::generateOTP($lengthOTP);
             $customer = $this->customerRepository->where('phone', $phone)->where('otp', $otpString)->first();
             if ($customer) {

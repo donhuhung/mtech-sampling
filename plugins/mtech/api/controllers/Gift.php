@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Mtech\Sampling\Models\Gifts;
 use Mtech\Sampling\Models\Customers;
 use Mtech\Sampling\Models\Projects;
+use Mtech\Sampling\Models\LocationGift;
 use Mtech\API\Transformers\GiftTransformer;
+use Mtech\API\Transformers\LocationGiftTransformer;
 use DB;
 
 /**
@@ -17,11 +19,13 @@ class Gift extends General {
     protected $giftRepository;
     protected $customerRepository;
     protected $projectRepository;
+    protected $locationGiftRepository;
 
-    public function __construct(Gifts $gift, Customers $customner, Projects $project) {
+    public function __construct(Gifts $gift, Customers $customner, Projects $project, LocationGift $locationGift) {
         $this->giftRepository = $gift;
         $this->customerRepository = $customner;
         $this->projectRepository = $project;
+        $this->locationGiftRepository = $locationGift;
     }
     
     /**
@@ -51,8 +55,8 @@ class Gift extends General {
     public function getListGift(Request $request) {
         try {
             $locationId = $request->get('location_id');
-            $gifts = $this->giftRepository->where('location_id',$locationId)->where('total_gift','>',0)->get();            
-            $results = fractal($gifts, new GiftTransformer(0))->toArray();
+            $gifts = $this->locationGiftRepository->where('location_id',$locationId)->where('gift_inventory','>',0)->get();            
+            $results = fractal($gifts, new LocationGiftTransformer(0))->toArray();
             return $this->respondWithSuccess($results, ('Get List Gift successful!'));            
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);
@@ -98,8 +102,7 @@ class Gift extends General {
                 //Choose Gift From Client
                 if ($arrGiftId) {                       
                     foreach ($arrGiftId as $gift) {
-                        Db::table('mtech_sampling_locations')->where('id', $locationId)->decrement('gift_inventory');
-                        Db::table('mtech_sampling_gifts')->where('id', $gift)->decrement('gift_inventory');
+                        Db::table('mtech_sampling_location_gift')->where('location_id', $locationId)->decrement('gift_inventory');                        
                         $this->giftRepository->insertUserReceiveGift($customnerID, $gift, $locationId);
                     }
                 }
@@ -112,13 +115,13 @@ class Gift extends General {
                 $arrGiftId = $gift['gift'];                
             }       
             $totalGift = count($arrGiftId);
-            $giftData = $this->giftRepository->whereIn('id', $arrGiftId)->get();
+            $giftData = $this->locationGiftRepository->whereIn('gift_id', $arrGiftId)->get();
             $counts = array_count_values($arrGiftId);
             foreach($giftData as $item){
                 $totalGiftReceive = $counts[$item->id];
                 $item->totalGiftRecive = $totalGiftReceive;
             }            
-            $results = fractal($giftData, new GiftTransformer($totalGiftReceive))->toArray();
+            $results = fractal($giftData, new LocationGiftTransformer($totalGiftReceive))->toArray();
             return $this->respondWithGiftSuccess($results, $totalGift,('Catch Gift successful!'));           
         } catch (\Exception $ex) {
             return $this->respondWithError($ex->getMessage(), self::HTTP_BAD_REQUEST);

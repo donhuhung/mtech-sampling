@@ -1,14 +1,19 @@
-<div class="report-widget">
-    <h3>Campaigns</h3>
-
-    <div
-        class="control-chart"
-        data-control="chart-pie"
-        data-size="200"
-        data-center-text="180">
-        <ul>
-            <li>Direct <span><?= $name?></span></li>
-            <li>Social networks <span><?= $value?></span></li>
-        </ul>
+<div class="report-widget">    
+    <div class="row" style="display: flex;">
+    <?php foreach ($rows as $row): ?>    
+        <div class="col-6" style="width: 50%">
+            <h3>Campaigns <?= $row['project_name'] ?></h3>     
+            <div
+                class="control-chart"
+                data-control="chart-pie"
+                data-size="200"
+                data-center-text="<?= $row['kpi'] ?>">
+                <ul>
+                    <li>Realtime <span><?= $row['totalGiftInventory'] ?></span></li>
+                    <li>Import <span><?= $row['kpi'] ?></span></li>
+                </ul>
+            </div>
+        </div>            
+    <?php endforeach ?>
     </div>
 </div>

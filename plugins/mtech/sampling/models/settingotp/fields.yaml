@@ -5,31 +5,39 @@ fields:
         descriptionFrom: description
         span: auto
         type: relation
+        required: true
     brand_name:
         label: 'Brand Name'
         span: auto
         type: text
+        required: true
     account_name:
         label: 'Account Name'
         span: auto
         type: text
+        required: true
     account_password:
         label: 'Account Password'
         span: auto
-        type: password
+        type: text
+        required: true
     url_telco:
         label: 'URL Telco'
         span: auto
         type: text
+        required: true
     text_sms:
         label: 'Text SMS'
         span: auto
         type: text
+        required: true
     length_otp:
         label: 'Length OTP'
         span: auto
         type: text
+        required: true
     time_expired_otp:
         label: 'Time Expired OTP'
         span: auto
         type: text
+        required: true

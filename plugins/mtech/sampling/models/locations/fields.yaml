@@ -9,19 +9,6 @@ fields:
         descriptionFrom: description
         span: auto
         type: relation
-    total_gift:
-        label: 'Total Gift'
-        span: auto
-        type: number
-    gift_run:
-        label: 'Gift Runed'
-        span: auto
-        type: number
-        default: 0
-    gift_inventory:
-        label: 'Gift Inventory'
-        span: auto
-        type: number
     start_date:
         label: 'Start Date'
         mode: date
@@ -40,7 +27,7 @@ fields:
         type: relation
 tabs:
     fields:
-        gift:
+        locationGifts:
             label: Gift
             span: full
             type: partial

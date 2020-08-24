@@ -1,7 +1,11 @@
 <?php
 
 namespace Mtech\API\Classes;
+
 use Mtech\Sampling\Models\OTP;
+use ZipArchive;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 class HelperClass {
 
@@ -54,14 +58,12 @@ class HelperClass {
      * @return \Illuminate\Http\Response
      */
     public static function randomString($length = 10) {
-        $str = "";
-        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
-        $max = count($characters) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $rand = mt_rand(0, $max);
-            $str .= $characters[$rand];
+        $random = substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
+        if (preg_match('/[A-Za-z0-9]/', $random)) {
+            return $random;
+        } else {
+            return self::randomString();
         }
-        return $str;
     }
 
     public static function randomNumber($length = 10) {
@@ -102,11 +104,71 @@ class HelperClass {
     public static function generateOTP($length) {
         $lengthOTP = $length;
         $otp = self::randomString($length);
-        $checkOTP = OTP::where('otp',$otp)->first();
-        if($checkOTP){
+        $checkOTP = OTP::where('otp', $otp)->first();
+        if ($checkOTP) {
             self::generateOTP($lengthOTP);
         }
         return $otp;
+    }
+
+    public static function downloadZip($dir, $zip_file) {
+
+        // Get real path for our folder
+        $rootPath = realpath($dir);
+
+        // Initialize archive object
+        $zip = new ZipArchive();
+        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        // Create recursive directory iterator
+        /** @var SplFileInfo[] $files */
+        $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($rootPath), RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $name => $file) {
+            // Skip directories (they would be added automatically)
+            if (!$file->isDir()) {
+                // Get real and relative path for current file
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+                // Add current file to archive
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+
+        // Zip archive will be created only after closing object
+        $zip->close();
+
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . basename($zip_file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($zip_file));
+        readfile($zip_file);
+    }
+
+    public static function deleteDir($dirPath) {
+        if (!is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                self::deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
     }
 
 }

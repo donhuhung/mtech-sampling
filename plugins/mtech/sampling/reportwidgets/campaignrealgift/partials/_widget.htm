@@ -1,0 +1,105 @@
+<script>
+$(document).ready(function () {
+    var chart = new CanvasJS.Chart("chartContainerLocation", {
+	theme:"light2",
+	animationEnabled: true,
+	title:{
+		text: "Performance results chart"
+	},
+	toolTip: {
+		shared: "true"
+	},
+	legend:{
+		cursor:"pointer",
+		itemclick : toggleDataSeries
+	},
+	data: [{
+		type: "spline",
+		visible: false,
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Week 1",
+		dataPoints: [
+			{ label: "Ep. 1", y: 2.22 },
+			{ label: "Ep. 2", y: 2.20 },
+			{ label: "Ep. 3", y: 2.44 },
+			{ label: "Ep. 4", y: 2.45 },
+			{ label: "Ep. 5", y: 2.58 },
+			{ label: "Ep. 6", y: 2.44 },
+			{ label: "Ep. 7", y: 2.40 },
+			{ label: "Ep. 8", y: 2.72 },
+			{ label: "Ep. 9", y: 2.66 },
+			{ label: "Ep. 10", y: 3.04 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		visible: false,
+		yValueFormatString: "##.00mn",
+		name: "Week 2",
+		dataPoints: [
+			{ label: "Ep. 1", y: 3.86 },
+			{ label: "Ep. 2", y: 3.76 },
+			{ label: "Ep. 3", y: 3.77 },
+			{ label: "Ep. 4", y: 3.65 },
+			{ label: "Ep. 5", y: 3.90 },
+			{ label: "Ep. 6", y: 3.88 },
+			{ label: "Ep. 7", y: 3.69 },
+			{ label: "Ep. 8", y: 3.86 },
+			{ label: "Ep. 9", y: 3.38 },
+			{ label: "Ep. 10", y: 4.20 }
+		]
+	},
+	{
+		type: "spline",
+		visible: false,
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Week 3",
+		dataPoints: [
+			{ label: "Ep. 1", y: 4.37 },
+			{ label: "Ep. 2", y: 4.27 },
+			{ label: "Ep. 3", y: 4.72 },
+			{ label: "Ep. 4", y: 4.87 },
+			{ label: "Ep. 5", y: 5.35 },
+			{ label: "Ep. 6", y: 5.50 },
+			{ label: "Ep. 7", y: 4.84 },
+			{ label: "Ep. 8", y: 4.13 },
+			{ label: "Ep. 9", y: 5.22 },
+			{ label: "Ep. 10", y: 5.39 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Week 4",
+		dataPoints: [
+			{ label: "Ep. 1", y: 6.64 },
+			{ label: "Ep. 2", y: 6.31 },
+			{ label: "Ep. 3", y: 6.59 },
+			{ label: "Ep. 4", y: 6.95 },
+			{ label: "Ep. 5", y: 7.16 },
+			{ label: "Ep. 6", y: 6.40 },
+			{ label: "Ep. 7", y: 7.20 },
+			{ label: "Ep. 8", y: 7.17 },
+			{ label: "Ep. 9", y: 6.95 },
+			{ label: "Ep. 10", y: 7.09 }
+		]
+	}]
+});
+chart.render();
+function toggleDataSeries(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible ){
+		e.dataSeries.visible = false;
+	} else {
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+});
+</script>
+<div class="report-widget">   
+    <div id="chartContainerLocation" style="height: 370px; width: 100%;"></div>
+</div>

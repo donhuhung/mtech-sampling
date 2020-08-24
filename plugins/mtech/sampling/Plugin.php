@@ -7,11 +7,14 @@ use System\Classes\PluginBase;
 use BackendMenu;
 use Event;
 use Mail;
+use BackendAuth;
+use DB;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Controllers\Users as UserController;
 use Mtech\Sampling\Models\Customers;
 use Mtech\Sampling\Models\CustomerGifts;
 use Mtech\Sampling\Models\Locations;
+use Mtech\Sampling\Models\Projects;
 
 class Plugin extends PluginBase {
 
@@ -55,6 +58,37 @@ class Plugin extends PluginBase {
                 'key' => 'user_id',
                 'otherKey' => 'location_id'
             ];
+            $model->addDynamicMethod('getLocationsOptions', function() use ($model) {
+                /* this is where you write the function */
+                $user = BackendAuth::getUser();
+                $userId = $user->id;
+                $userGroups = $user->groups;
+                $arrProject = [];
+                $arrayLocations = [];
+                if ($userGroups) {
+                    foreach ($userGroups as $group) {
+                        if ($group->code == "quan-ly-du-an" || $group->code == "tro-ly-du-an" || $group->code == "khach-hang") {
+                            $projects = DB::table('mtech_sampling_backend_users_projects')->where('user_id', $userId)->get();
+                            foreach ($projects as $project) {
+                                array_push($arrProject, $project->project_id);
+                            }
+                        }
+                    }
+                }
+                if (!$arrProject) {
+                    $projects = Projects::where('status', 1)->get();
+                    foreach ($projects as $project) {
+                        array_push($arrProject, $project->id);
+                    }
+                }
+                $locations = Locations::whereIn('project_id', $arrProject)->get();                
+                if ($locations) {                    
+                    foreach ($locations as $location) {                        
+                        $arrayLocations[$location->id] = $location->location_name . ' - ' . $location->project->project_name;
+                    }                                             
+                }
+                return $arrayLocations;
+            });
         });
 
         //Extend Form Fields
@@ -88,8 +122,7 @@ class Plugin extends PluginBase {
                 ],
                 'locations' => [
                     'label' => 'Locations',
-                    'type' => 'relation',
-                    'select' => 'location_name',
+                    'type' => 'checkboxlist',
                     'tab' => 'rainlab.user::lang.user.account',
                     'span' => 'left',
                 ]
@@ -109,7 +142,6 @@ class Plugin extends PluginBase {
                 }
             }
         });
-        
         //Register Command Line
         $this->app->singleton('sampling:update_status_project', function() {
             return new \Mtech\Sampling\Console\UpdateStatusProject;
@@ -325,14 +357,23 @@ class Plugin extends PluginBase {
             'total_gift_project' => [$this, 'totalGiftProject'],
             'total_gift_runed_project' => [$this, 'totalGiftRunnedProject'],
             'total_gift_inventory_project' => [$this, 'totalGiftInventoryProject'],
+            'avatar_customer' => [$this, 'avatarCustomer'],
+            'bill_customer' => [$this, 'billCustomer'],
         ];
     }
-    
-    public function registerReportWidgets()
-    {
+
+    public function registerReportWidgets() {
         return [
-            'Mtech\Sampling\ReportWidgets\CampaignGift'=>[
-                'label'   => 'Campagin Gift',
+            'Mtech\Sampling\ReportWidgets\CampaignGift' => [
+                'label' => 'Campagin Gift',
+                'context' => 'dashboard'
+            ],
+            'Mtech\Sampling\ReportWidgets\CampaignRealGift' => [
+                'label' => 'Result Process',
+                'context' => 'dashboard'
+            ],
+            'Mtech\Sampling\ReportWidgets\LocationGift' => [
+                'label' => 'Compare Gift Province',
                 'context' => 'dashboard'
             ],
         ];
@@ -362,10 +403,10 @@ class Plugin extends PluginBase {
 
         $dateMade = date_diff(date_create($now), date_create($startDate));
         $dateMade = $dateMade->format("%a");
-        
-        if($dateMade > $totalDate){
+
+        if ($dateMade > $totalDate) {
             return $totalDate . '/' . $totalDate;
-        }        
+        }
         return $dateMade . '/' . $totalDate;
     }
 
@@ -398,7 +439,31 @@ class Plugin extends PluginBase {
         }
         return $totalGiftInventory;
     }
-    
+
+    public function avatarCustomer($value, $column, $record) {
+        $recordId = $record->id;
+        $customerGift = CustomerGifts::find($recordId);
+        $customer = $customerGift->customer;
+        $avatar = $customer->file_name_avatar;
+        if ($avatar && $avatar != "null") {
+            $srcAvatar = '<img src="/storage/app/media/' . $avatar . '" width="120" height="120"';
+            return $srcAvatar;
+        }
+        return 'No Image';
+    }
+
+    public function billCustomer($value, $column, $record) {
+        $recordId = $record->id;
+        $customerGift = CustomerGifts::find($recordId);
+        $customer = $customerGift->customer;
+        $bill = $customer->file_name_bill;
+        if ($bill && $bill != "null") {
+            $srcAvatar = '<img src="/storage/app/media/' . $bill . '" width="120" height="120"';
+            return $srcAvatar;
+        }
+        return 'No Image';
+    }
+
     public function registerSchedule($schedule) {
         $schedule->command('sampling:update_status_project')->dailyAt('01:00');
     }

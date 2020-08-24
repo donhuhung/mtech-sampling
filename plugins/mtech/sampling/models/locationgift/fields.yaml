@@ -1,0 +1,13 @@
+fields:
+    gift_id:
+        label: Gift
+        span: auto
+        type: dropdown    
+    total_gift:
+        label: 'Total Gift'
+        span: auto
+        type: number
+    gift_inventory:
+        label: 'Gift Inventory'
+        span: auto
+        type: number    

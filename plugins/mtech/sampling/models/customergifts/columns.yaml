@@ -52,4 +52,10 @@ columns:
         searchable: true
     customer:
         label: Product Sampling
-        type: product_sampling                
+        type: product_sampling
+    avatar_customer:
+        label: Avatar
+        type: avatar_customer    
+    bill_customer:
+        label: Bill
+        type: bill_customer    

@@ -1,0 +1,18 @@
+columns:
+    id:
+        label: id
+        type: number  
+    gift:
+        label: Gift Name
+        relation: gift
+        select: gift_name
+        searchable: true
+    total_gift:
+        label: Total Gift
+        type: text
+    gift_inventory:
+        label: Gift Inventory
+        type: text
+    created_at:
+        label: created_at
+        type: datetime

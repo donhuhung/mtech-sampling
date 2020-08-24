@@ -1,0 +1,62 @@
+<?php
+
+$dataPoints = $rows;
+?>
+<script>
+    $(document).ready(function () {
+        var dataPoints = '<?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>';
+        dataPoints = JSON.parse(dataPoints);
+
+        var lenghtObject = assocArraySize(dataPoints);
+        for (var index = 0; index < lenghtObject; index++) {
+            var projectId = Object.keys(dataPoints)[index];
+            var projectName = "";
+            var labelKPI = [];
+            var labelRealtime = [];
+            var dataProjects = dataPoints[projectId];
+            for (var i = 0; i < dataProjects.length; i++) {
+                labelKPI.push({label: dataProjects[i].province_name, y: dataProjects[i].kpi});
+                labelRealtime.push({label: dataProjects[i].province_name, y: dataProjects[i].realTime});
+                projectName = dataProjects[i].project_name;
+            }
+            var chart = new CanvasJS.Chart("chartContainer" + projectId, {
+                title: {
+                    text: projectName
+                },
+                data: [
+                    {
+                        type: "stackedBar100",
+                        toolTipContent: "{label}<br><b>{name}:</b> {y} (#percent%)",
+                        showInLegend: true,
+                        name: "Real Time",
+                        dataPoints: labelRealtime
+                    },
+                    {
+                        type: "stackedBar100",
+                        toolTipContent: "{label}<br><b>{name}:</b> {y} (#percent%)",
+                        showInLegend: true,
+                        name: "KPI",
+                        dataPoints: labelKPI
+                    },
+                ]
+            });
+            chart.render();
+        }
+        function assocArraySize(obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key))
+                    size++;
+            }
+            return size;
+        };
+
+    });
+</script>
+<div class="report-widget">  
+    <div class="row" style="display: flex">
+        <?php foreach($dataPoints as $index=>$data){?>        
+            <div id="chartContainer<?= $index;?>" style="height: 370px; width: 50%;"></div>
+        <?php }?>
+    </div>    
+</div>

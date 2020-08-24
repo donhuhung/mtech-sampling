@@ -8,25 +8,17 @@ fields:
         mode: file
         span: auto
         type: mediafinder
-    total_gift:
-        label: 'Total Gift'
-        span: auto
-        type: number
-    gift_inventory:
-        label: 'Gift Inventory'
-        span: auto
-        type: number
     category:
         label: Category
         nameFrom: name
         descriptionFrom: description
         span: auto
         type: relation
-    location_id:
-        label: Location
-        descriptionFrom: description
+    project:
+        label: Project
+        type: relation
+        nameFrom: project_name
         span: auto
-        type: dropdown
     productBrand:
         label: 'Product Brand'
         nameFrom: name
